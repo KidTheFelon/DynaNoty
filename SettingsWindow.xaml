@@ -1,0 +1,1008 @@
+<Window x:Class="DynaNoty.SettingsWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
+        Title="⚙️ Настройки DynaNoty" Height="900" Width="800"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        MinHeight="800" MinWidth="700"
+        Background="#FF1C1C1E"
+        FontFamily="Segoe UI">
+
+    <Grid>
+        <!-- Фон с градиентом -->
+        <Rectangle Fill="#FF1C1C1E" />
+
+        <Grid Margin="20">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <!-- Заголовок с иконкой -->
+            <Border Grid.Row="0" Background="#FF2C2C2E" CornerRadius="15" Padding="20,15" Margin="0,0,0,20">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                    <TextBlock Text="⚙️" FontSize="20" Margin="0,0,10,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Настройки уведомлений" 
+                               FontSize="20" FontWeight="Bold" 
+                               Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Кнопки навигации по вкладкам -->
+            <StackPanel Grid.Row="1" Orientation="Vertical" Margin="0,0,0,10">
+                <!-- Кнопки вкладок с горизонтальной прокруткой -->
+                <ScrollViewer x:Name="TabsScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" 
+                              Margin="0,0,0,10" Height="45" Background="Transparent"
+                              CanContentScroll="False">
+                    <ScrollViewer.ToolTip>
+                        <StackPanel>
+                            <TextBlock Text="Навигация по вкладкам:" FontWeight="Bold" Foreground="White"/>
+                            <TextBlock Text="• Ctrl + Tab - следующая вкладка" Foreground="White"/>
+                            <TextBlock Text="• Ctrl + Shift + Tab - предыдущая вкладка" Foreground="White"/>
+                            <TextBlock Text="• Прокрутка мышью - навигация по вкладкам" Foreground="White"/>
+                        </StackPanel>
+                    </ScrollViewer.ToolTip>
+                    <ScrollViewer.Resources>
+                        <Style TargetType="ScrollBar">
+                            <Setter Property="Background" Value="#FF2C2C2E"/>
+                            <Setter Property="BorderBrush" Value="#FF007AFF"/>
+                            <Setter Property="Foreground" Value="#FF007AFF"/>
+                            <Setter Property="Width" Value="12"/>
+                            <Setter Property="Height" Value="12"/>
+                        </Style>
+                        <Style TargetType="ScrollViewer">
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="ScrollViewer">
+                                        <Grid>
+                                            <ScrollContentPresenter/>
+                                            <ScrollBar Name="PART_HorizontalScrollBar" 
+                                                       Orientation="Horizontal" 
+                                                       Grid.Row="1" 
+                                                       Background="#FF2C2C2E"
+                                                       BorderBrush="#FF007AFF"
+                                                       Foreground="#FF007AFF"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </ScrollViewer.Resources>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="10,5">
+                        <Button x:Name="MainTabButton" Content="🔧 Основные" Width="120" Height="35" 
+                                Margin="5,0" Click="MainTabButton_Click" Background="#FF007AFF"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                        <Button x:Name="SizeTabButton" Content="📏 Размеры" Width="120" Height="35" 
+                                Margin="5,0" Click="SizeTabButton_Click" Background="#FF2C2C2E"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                        <Button x:Name="AnimationTabButton" Content="✨ Анимации" Width="120" Height="35" 
+                                Margin="5,0" Click="AnimationTabButton_Click" Background="#FF2C2C2E"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                        <Button x:Name="StyleTabButton" Content="🎨 Стили" Width="120" Height="35" 
+                                Margin="5,0" Click="StyleTabButton_Click" Background="#FF2C2C2E"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                        <Button x:Name="PerformanceTabButton" Content="⚡ Производительность" Width="160" Height="35" 
+                                Margin="5,0" Click="PerformanceTabButton_Click" Background="#FF2C2C2E"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                        <Button x:Name="AdvancedTabButton" Content="🔧 Продвинутые" Width="120" Height="35" 
+                                Margin="5,0" Click="AdvancedTabButton_Click" Background="#FF2C2C2E"
+                                Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                    </StackPanel>
+                </ScrollViewer>
+                
+                <!-- Контент вкладок -->
+                <!-- Основные настройки -->
+                <ScrollViewer x:Name="MainScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" MaxHeight="500">
+                    <StackPanel x:Name="MainTabContent" Visibility="Visible">
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="⚙️ Основные параметры" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="⏱️ Время показа (секунды):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="AutoHideTimeoutTextBox" 
+                                             Text="4" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📱 Максимум уведомлений:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="MaxNotificationsTextBox" 
+                                             Text="3" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <CheckBox Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="EnableAnimationsCheckBox" Content="✨ Включить анимации" 
+                                              IsChecked="True" Margin="0,15,0,5" Foreground="White" FontSize="12"/>
+
+                                    <CheckBox Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="ShowActionButtonCheckBox" Content="🔘 Показывать кнопку действия" 
+                                              IsChecked="True" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="🧹 Интервал очистки (секунды):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="CleanupIntervalTextBox" 
+                                             Text="1" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <CheckBox Grid.Row="5" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="ShowInSystemTrayCheckBox" Content="📱 Показывать в системном трее" 
+                                              IsChecked="False" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <CheckBox Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="EnableSoundCheckBox" Content="🔊 Звуковые уведомления" 
+                                              IsChecked="False" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="EnableVibrationCheckBox" Content="📳 Вибрация" 
+                                              IsChecked="False" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Размеры и позиционирование -->
+                <ScrollViewer x:Name="SizeScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" Visibility="Collapsed" MaxHeight="500">
+                        <StackPanel x:Name="SizeTabContent">
+                        <!-- Размеры уведомлений -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="📏 Размеры уведомлений" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="📐 Максимальная ширина (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="MaxWidthTextBox" 
+                                             Text="300" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📏 Минимальная ширина (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="MinWidthTextBox" 
+                                             Text="60" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="📏 Высота (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="HeightTextBox" 
+                                             Text="60" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="📏 Высота при раскрытии (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="ExpandedHeightTextBox" 
+                                             Text="80" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="📐 Высота области уведомлений (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="NotificationAreaHeightTextBox" 
+                                             Text="250" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Размер контейнера иконки (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="5" Grid.Column="1" x:Name="IconSizeTextBox" 
+                                             Text="24" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Позиционирование -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="📍 Позиционирование" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="⬆️ Отступ сверху (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="TopMarginTextBox" 
+                                             Text="25" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📏 Расстояние между (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="VerticalSpacingTextBox" 
+                                             Text="70" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="🔲 Скругление углов (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="CornerRadiusTextBox" 
+                                             Text="20" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="Размер кнопки действия (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="ActionButtonSizeTextBox" 
+                                             Text="24" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                <!-- Анимации -->
+                <ScrollViewer x:Name="AnimationScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" Visibility="Collapsed" MaxHeight="500">
+                        <StackPanel x:Name="AnimationTabContent">
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="✨ Настройки анимаций" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="🎬 Длительность появления (мс):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="AppearDurationTextBox" 
+                                             Text="300" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📈 Длительность расширения (мс):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="ExpandDurationTextBox" 
+                                             Text="400" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="🔄 Длительность сдвига (мс):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="RepositionDurationTextBox" 
+                                             Text="300" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="3" Grid.Column="0" Text="⏳ Задержка расширения (мс):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="3" Grid.Column="1" x:Name="ExpandDelayTextBox" 
+                                             Text="500" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="⏱️ Время свернутого (мс):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="CompactDisplayDurationTextBox" 
+                                             Text="3000" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+        <TextBlock Grid.Row="5" Grid.Column="0" Text="⏱️ Время расширенного (мс):" 
+                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox Grid.Row="5" Grid.Column="1" x:Name="ExpandedDisplayDurationTextBox" 
+                 Text="5000" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+        <TextBlock Grid.Row="6" Grid.Column="0" Text="⏱️ Время полного раскрытия (мс):" 
+                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+        <TextBox Grid.Row="6" Grid.Column="1" x:Name="FullyExpandedDisplayDurationTextBox" 
+                 Text="8000" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="EnableAutoExpandCheckBox"
+                                              Content="🔄 Включить автораскрытие"
+                                              Foreground="White" 
+                                              Margin="0,10,0,5"
+                                              FontSize="12"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                <!-- Стили -->
+                <ScrollViewer x:Name="StyleScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" Visibility="Collapsed" MaxHeight="500">
+                        <StackPanel x:Name="StyleTabContent">
+                        <!-- Готовые темы -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="🎨 Готовые темы" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Выберите тему:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <ComboBox Grid.Row="0" Grid.Column="1" x:Name="ThemeComboBox" 
+                                              SelectedIndex="0" Margin="10,5" Padding="8" 
+                                              Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"
+                                              FontFamily="Segoe UI Emoji">
+                                        <ComboBox.Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Background" Value="#FF3A3A3C"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ComboBox">
+                                                            <Grid>
+                                                                <Border Background="{TemplateBinding Background}" 
+                                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                        CornerRadius="5">
+                                                                    <Grid>
+                                                                        <ToggleButton Name="ToggleButton" 
+                                                                                      Background="{TemplateBinding Background}" 
+                                                                                      BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                                      BorderThickness="0" 
+                                                                                      IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition/>
+                                                                                    <ColumnDefinition Width="20"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <ContentPresenter Grid.Column="0" 
+                                                                                                  Content="{TemplateBinding SelectionBoxItem}" 
+                                                                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                                                                                  Margin="{TemplateBinding Padding}" 
+                                                                                                  VerticalAlignment="Center" 
+                                                                                                  HorizontalAlignment="Left"/>
+                                                                                <Path Grid.Column="1" 
+                                                                                      Fill="{TemplateBinding Foreground}" 
+                                                                                      HorizontalAlignment="Center" 
+                                                                                      VerticalAlignment="Center" 
+                                                                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                                                            </Grid>
+                                                                        </ToggleButton>
+                                                                        <ContentPresenter Name="ContentSite" 
+                                                                                          IsHitTestVisible="False" 
+                                                                                          Content="{TemplateBinding SelectionBoxItem}" 
+                                                                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                                                                          Margin="{TemplateBinding Padding}" 
+                                                                                          VerticalAlignment="Center" 
+                                                                                          HorizontalAlignment="Left" 
+                                                                                          Visibility="Hidden"/>
+                                                                    </Grid>
+                                                                </Border>
+                                                                <Popup Name="Popup" 
+                                                                       Placement="Bottom" 
+                                                                       IsOpen="{TemplateBinding IsDropDownOpen}" 
+                                                                       AllowsTransparency="True" 
+                                                                       Focusable="False" 
+                                                                       PopupAnimation="Slide">
+                                                                    <Grid Name="DropDown" 
+                                                                          SnapsToDevicePixels="True" 
+                                                                          MinWidth="{TemplateBinding ActualWidth}" 
+                                                                          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                                        <Border Name="DropDownBorder" 
+                                                                                Background="#FF2C2C2E" 
+                                                                                BorderThickness="1" 
+                                                                                BorderBrush="#FF007AFF" 
+                                                                                CornerRadius="5">
+                                                                            <ScrollViewer Margin="4,6,4,6" 
+                                                                                          SnapsToDevicePixels="True">
+                                                                                <StackPanel IsItemsHost="True" 
+                                                                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                                            </ScrollViewer>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </Popup>
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ComboBox.Style>
+                                        <ComboBox.ItemContainerStyle>
+                                            <Style TargetType="ComboBoxItem">
+                                                <Setter Property="Background" Value="#FF2C2C2E"/>
+                                                <Setter Property="Foreground" Value="White"/>
+                                                <Setter Property="BorderThickness" Value="0"/>
+                                                <Setter Property="Padding" Value="8,4"/>
+                                                <Style.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#FF007AFF"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Background" Value="#FF007AFF"/>
+                                                    </Trigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </ComboBox.ItemContainerStyle>
+                                        <ComboBoxItem Content="🖥️ Системная"/>
+                                        <ComboBoxItem Content="🌙 Темная"/>
+                                        <ComboBoxItem Content="☀️ Светлая"/>
+                                        <ComboBoxItem Content="🔵 Синяя"/>
+                                        <ComboBoxItem Content="🟢 Зеленая"/>
+                                        <ComboBoxItem Content="🟣 Фиолетовая"/>
+                                        <ComboBoxItem Content="🟠 Оранжевая"/>
+                                        <ComboBoxItem Content="🩷 Розовая"/>
+                                        <ComboBoxItem Content="⚙️ Пользовательская"/>
+                                    </ComboBox>
+
+                                    <Button Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                            x:Name="ApplyThemeButton" Content="✨ Применить тему" 
+                                            Click="ApplyThemeButton_Click" Background="#FF007AFF" 
+                                            Foreground="White" BorderThickness="0" FontWeight="Bold" 
+                                            Margin="0,10,0,0" Height="35"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Предварительный просмотр темы -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="👁️ Предварительный просмотр" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Border x:Name="PreviewNotification" Background="#FF1C1C1E" CornerRadius="10" Padding="15" Margin="0,0,0,10">
+                                    <StackPanel>
+                                        <TextBlock x:Name="PreviewTitle" Text="📱 Тестовое уведомление" FontSize="14" FontWeight="Bold" 
+                                                   Foreground="White" Margin="0,0,0,5"/>
+                                        <TextBlock x:Name="PreviewSubtitle" Text="Это пример того, как будет выглядеть уведомление" 
+                                                   FontSize="10" Foreground="#FF8E8E93"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <TextBlock Text="💡 Совет: Выберите тему и нажмите 'Применить тему' для предварительного просмотра" 
+                                           FontSize="10" Foreground="#FF8E8E93" TextWrapping="Wrap"/>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Цвета -->
+                        <Border x:Name="ColorSchemeSection" Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                            <StackPanel>
+                                <TextBlock Text="🎨 Цветовая схема" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="🖼️ Цвет фона:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <xctk:ColorPicker Grid.Row="0" Grid.Column="1" x:Name="BackgroundColorPicker" 
+                                                      SelectedColor="#FF1C1C1E" Margin="10,5" 
+                                                      Background="#FF3A3A3C" Foreground="White" 
+                                                      BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📝 Цвет текста:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <xctk:ColorPicker Grid.Row="1" Grid.Column="1" x:Name="TextColorPicker" 
+                                                      SelectedColor="#FFFFFFFF" Margin="10,5" 
+                                                      Background="#FF3A3A3C" Foreground="White" 
+                                                      BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Цвет иконки:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <xctk:ColorPicker Grid.Row="2" Grid.Column="1" x:Name="IconColorPicker" 
+                                                      SelectedColor="#FFFFFFFF" Margin="10,5" 
+                                                      Background="#FF3A3A3C" Foreground="White" 
+                                                      BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Шрифты -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20">
+                            <StackPanel>
+                                <TextBlock Text="📝 Настройки шрифтов" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0" Text="📰 Размер шрифта заголовка:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="0" Grid.Column="1" x:Name="TitleFontSizeTextBox" 
+                                             Text="16" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📄 Размер шрифта подзаголовка:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="1" Grid.Column="1" x:Name="SubtitleFontSizeTextBox" 
+                                             Text="14" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Размер иконки:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="2" Grid.Column="1" x:Name="IconFontSizeTextBox" 
+                                             Text="20" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Логирование -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,15,0,0">
+                            <StackPanel>
+                                <TextBlock Text="📝 Настройки логирования" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="2*"/>
+                                        <ColumnDefinition Width="1*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <CheckBox Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="EnableLoggingCheckBox" Content="📝 Включить логирование" 
+                                              IsChecked="True" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <TextBlock Grid.Row="1" Grid.Column="0" Text="📊 Уровень логирования:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <ComboBox Grid.Row="1" Grid.Column="1" x:Name="LogLevelComboBox" 
+                                              SelectedIndex="1" Margin="10,5" Padding="8" 
+                                              Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2">
+                                        <ComboBox.Style>
+                                            <Style TargetType="ComboBox">
+                                                <Setter Property="Background" Value="#FF3A3A3C"/>
+                                                <Setter Property="Template">
+                                                    <Setter.Value>
+                                                        <ControlTemplate TargetType="ComboBox">
+                                                            <Grid>
+                                                                <Border Background="{TemplateBinding Background}" 
+                                                                        BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                        BorderThickness="{TemplateBinding BorderThickness}" 
+                                                                        CornerRadius="5">
+                                                                    <Grid>
+                                                                        <ToggleButton Name="ToggleButton" 
+                                                                                      Background="{TemplateBinding Background}" 
+                                                                                      BorderBrush="{TemplateBinding BorderBrush}" 
+                                                                                      BorderThickness="0" 
+                                                                                      IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}">
+                                                                            <Grid>
+                                                                                <Grid.ColumnDefinitions>
+                                                                                    <ColumnDefinition/>
+                                                                                    <ColumnDefinition Width="20"/>
+                                                                                </Grid.ColumnDefinitions>
+                                                                                <ContentPresenter Grid.Column="0" 
+                                                                                                  Content="{TemplateBinding SelectionBoxItem}" 
+                                                                                                  ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                                                                  ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                                                                                  Margin="{TemplateBinding Padding}" 
+                                                                                                  VerticalAlignment="Center" 
+                                                                                                  HorizontalAlignment="Left"/>
+                                                                                <Path Grid.Column="1" 
+                                                                                      Fill="{TemplateBinding Foreground}" 
+                                                                                      HorizontalAlignment="Center" 
+                                                                                      VerticalAlignment="Center" 
+                                                                                      Data="M 0 0 L 4 4 L 8 0 Z"/>
+                                                                            </Grid>
+                                                                        </ToggleButton>
+                                                                        <ContentPresenter Name="ContentSite2" 
+                                                                                          IsHitTestVisible="False" 
+                                                                                          Content="{TemplateBinding SelectionBoxItem}" 
+                                                                                          ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" 
+                                                                                          ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" 
+                                                                                          Margin="{TemplateBinding Padding}" 
+                                                                                          VerticalAlignment="Center" 
+                                                                                          HorizontalAlignment="Left" 
+                                                                                          Visibility="Hidden"/>
+                                                                    </Grid>
+                                                                </Border>
+                                                                <Popup Name="Popup" 
+                                                                       Placement="Bottom" 
+                                                                       IsOpen="{TemplateBinding IsDropDownOpen}" 
+                                                                       AllowsTransparency="True" 
+                                                                       Focusable="False" 
+                                                                       PopupAnimation="Slide">
+                                                                    <Grid Name="DropDown" 
+                                                                          SnapsToDevicePixels="True" 
+                                                                          MinWidth="{TemplateBinding ActualWidth}" 
+                                                                          MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                                                        <Border Name="DropDownBorder" 
+                                                                                Background="#FF2C2C2E" 
+                                                                                BorderThickness="1" 
+                                                                                BorderBrush="#FF007AFF" 
+                                                                                CornerRadius="5">
+                                                                            <ScrollViewer Margin="4,6,4,6" 
+                                                                                          SnapsToDevicePixels="True">
+                                                                                <StackPanel IsItemsHost="True" 
+                                                                                            KeyboardNavigation.DirectionalNavigation="Contained"/>
+                                                                            </ScrollViewer>
+                                                                        </Border>
+                                                                    </Grid>
+                                                                </Popup>
+                                                            </Grid>
+                                                        </ControlTemplate>
+                                                    </Setter.Value>
+                                                </Setter>
+                                            </Style>
+                                        </ComboBox.Style>
+                                        <ComboBoxItem Content="Debug"/>
+                                        <ComboBoxItem Content="Information"/>
+                                        <ComboBoxItem Content="Warning"/>
+                                        <ComboBoxItem Content="Error"/>
+                                    </ComboBox>
+                                </Grid>
+                            </StackPanel>
+                        </Border>
+
+                        <!-- Системная интеграция -->
+                        <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,15,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🖥️ Системная интеграция" FontSize="16" FontWeight="Bold" 
+                                           Foreground="White" Margin="0,0,0,15"/>
+
+                                <StackPanel>
+                                    <CheckBox x:Name="AutoAdaptToSystemThemeCheckBox" 
+                                              Content="🌙 Автоподстройка под тему" 
+                                              IsChecked="True" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <CheckBox x:Name="UseSystemAccentColorCheckBox" 
+                                              Content="🎨 Использовать акцентный цвет" 
+                                              IsChecked="True" Margin="0,5" Foreground="White" FontSize="12"/>
+
+                                    <CheckBox x:Name="SystemSettingsOverrideCheckBox" 
+                                              Content="⚡ Приоритет системных настроек" 
+                                              IsChecked="False" Margin="0,5" Foreground="White" FontSize="12"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+
+                    <!-- Производительность -->
+                    <ScrollViewer x:Name="PerformanceScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" Visibility="Collapsed" MaxHeight="500">
+                        <StackPanel x:Name="PerformanceTabContent">
+                            <!-- Настройки пула -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="⚡ Настройки производительности" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="📦 Максимальный размер пула:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="MaxPoolSizeTextBox" 
+                                                 Text="10" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="🔥 Предварительное создание:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="PreWarmCountTextBox" 
+                                                 Text="3" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="💾 Включить кэширование:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <CheckBox Grid.Row="2" Grid.Column="1" x:Name="EnableCachingCheckBox" 
+                                                  IsChecked="True" Margin="10,5" Foreground="White" FontSize="14"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="📊 Максимальный размер кэша:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="MaxCacheSizeTextBox" 
+                                                 Text="100" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Статистика производительности -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,15,0,0">
+                                <StackPanel>
+                                    <TextBlock Text="📈 Статистика производительности" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Активные уведомления:" 
+                                                   Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="0" x:Name="ActiveNotificationsText" 
+                                                   Text="0" Foreground="#FF34C759" FontSize="14" FontWeight="Bold" 
+                                                   HorizontalAlignment="Center" Margin="0,5"/>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="1" Text="Размер пула:" 
+                                                   Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="1" x:Name="PoolSizeText" 
+                                                   Text="0" Foreground="#FF007AFF" FontSize="14" FontWeight="Bold" 
+                                                   HorizontalAlignment="Center" Margin="0,5"/>
+
+                                        <TextBlock Grid.Row="0" Grid.Column="2" Text="Коэффициент переиспользования:" 
+                                                   Foreground="White" FontWeight="Bold" HorizontalAlignment="Center"/>
+                                        <TextBlock Grid.Row="1" Grid.Column="2" x:Name="ReuseRateText" 
+                                                   Text="0%" Foreground="#FFFF9500" FontSize="14" FontWeight="Bold" 
+                                                   HorizontalAlignment="Center" Margin="0,5"/>
+
+                                        <Button Grid.Row="2" Grid.ColumnSpan="3" Content="🔄 Обновить статистику" 
+                                                Click="RefreshStatsButton_Click" Background="#FF007AFF" 
+                                                Foreground="White" BorderThickness="0" FontWeight="Bold" 
+                                                Margin="0,10,0,0" Height="35"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+
+                    <!-- Продвинутые настройки -->
+                    <ScrollViewer x:Name="AdvancedScrollViewer" VerticalScrollBarVisibility="Auto" Padding="20" Visibility="Collapsed" MaxHeight="500">
+                        <StackPanel x:Name="AdvancedTabContent">
+                            <!-- Rate Limiting -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="📊 Лимиты частоты" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Уведомлений в минуту:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="RateLimitTextBox" 
+                                                 Text="20" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Окно лимитирования (минуты):" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="RateLimitWindowTextBox" 
+                                                 Text="1" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Retry Logic -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="🔄 Повторные попытки" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Максимум попыток:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="MaxRetriesTextBox" 
+                                                 Text="3" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Задержка между попытками (мс):" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="RetryDelayTextBox" 
+                                                 Text="100" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Text Validation -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="📝 Ограничения текста" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Максимальная длина заголовка:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="MaxTitleLengthTextBox" 
+                                                 Text="100" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Максимальная длина описания:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="MaxSubtitleLengthTextBox" 
+                                                 Text="200" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Максимальная длина иконки:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="MaxIconLengthTextBox" 
+                                                 Text="10" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Fallback Values -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,0,0,15">
+                                <StackPanel>
+                                    <TextBlock Text="🛡️ Значения по умолчанию" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Иконка по умолчанию:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="DefaultIconTextBox" 
+                                                 Text="🔔" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="1" Grid.Column="0" Text="Текст при пустом заголовке:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="1" Grid.Column="1" x:Name="DefaultTitleTextBox" 
+                                                 Text="Уведомление" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="2" Grid.Column="0" Text="Иконка для звонков:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="2" Grid.Column="1" x:Name="CallIconTextBox" 
+                                                 Text="📞" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <TextBlock Grid.Row="3" Grid.Column="0" Text="Иконка для музыки:" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="3" Grid.Column="1" x:Name="MusicIconTextBox" 
+                                                 Text="🎵" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Monitoring -->
+                            <Border Background="#FF2C2C2E" CornerRadius="15" Padding="20">
+                                <StackPanel>
+                                    <TextBlock Text="📈 Мониторинг" FontSize="16" FontWeight="Bold" 
+                                               Foreground="White" Margin="0,0,0,15"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="2*"/>
+                                            <ColumnDefinition Width="1*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <TextBlock Grid.Row="0" Grid.Column="0" Text="Интервал отчетов (секунды):" 
+                                                   Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                        <TextBox Grid.Row="0" Grid.Column="1" x:Name="PerformanceReportIntervalTextBox" 
+                                                 Text="30" Margin="10,5" Background="#FF3A3A3C" 
+                                                 Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                        <CheckBox Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" 
+                                                  x:Name="EnableDetailedStatisticsCheckBox" Content="📊 Включить детальную статистику" 
+                                                  IsChecked="False" Margin="0,15,0,5" Foreground="White" FontSize="12"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
+                        </StackPanel>
+                    </ScrollViewer>
+            </StackPanel>
+
+            <!-- Кнопки с современным дизайном -->
+            <Border Grid.Row="2" Background="#FF2C2C2E" CornerRadius="15" Padding="20" Margin="0,20,0,0">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button x:Name="TestButton" Content="🧪 Тест" Width="100" Height="40" 
+                            Margin="0,0,10,0" Click="TestButton_Click" Background="#FF34C759"
+                            Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                    <Button x:Name="ResetButton" Content="🔄 Сброс" Width="100" Height="40" 
+                            Margin="0,0,10,0" Click="ResetButton_Click" Background="#FFFF9500"
+                            Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                    <Button x:Name="SaveButton" Content="💾 Сохранить" Width="120" Height="40" 
+                            Margin="0,0,10,0" Click="SaveButton_Click" Background="#FF007AFF"
+                            Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                    <Button x:Name="CancelButton" Content="❌ Отмена" Width="100" Height="40" 
+                            Click="CancelButton_Click" Background="#FF8E8E93"
+                            Foreground="White" BorderThickness="0" FontWeight="Bold" FontSize="12"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+    </Grid>
+</Window>
