@@ -63,7 +63,7 @@ namespace DynaNoty.Services
         {
             var distance = Math.Abs(to - from);
             var duration = CalculateMomentumDuration(distance, velocity, friction);
-            
+
             var animation = new DoubleAnimation(from, to, TimeSpan.FromMilliseconds(duration))
             {
                 EasingFunction = new MomentumEasingFunction

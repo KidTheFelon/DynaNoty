@@ -21,7 +21,7 @@ namespace DynaNoty.Examples
                     UsePhysicsForAppear = true,
                     UsePhysicsForExpand = false,
                     UsePhysicsForDismiss = true,
-                    
+
                     // Настройки пружины
                     SpringTension = 400,  // Напряжение пружины
                     SpringFriction = 40   // Трение пружины

@@ -163,21 +163,21 @@ namespace DynaNoty.Services
         private DoubleAnimation CreatePhysicsAnimation(double from, double to)
         {
             var settings = _config.PhysicsAnimations;
-            
+
             return settings.AnimationType switch
             {
                 PhysicsAnimationType.Spring => _physicsService.CreateSpringAnimation(
                     from, to, settings.SpringTension, settings.SpringFriction),
-                
+
                 PhysicsAnimationType.Bounce => _physicsService.CreateBounceAnimation(
                     from, to, settings.BounceAmplitude),
-                
+
                 PhysicsAnimationType.Elastic => _physicsService.CreateElasticAnimation(
                     from, to, settings.ElasticOscillations, settings.ElasticSpringiness),
-                
+
                 PhysicsAnimationType.Momentum => _physicsService.CreateMomentumAnimation(
                     from, to, settings.MomentumVelocity, settings.MomentumFriction),
-                
+
                 _ => _physicsService.CreateSpringAnimation(from, to, settings.SpringTension, settings.SpringFriction)
             };
         }
