@@ -115,6 +115,8 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="⏱️ Время показа (секунды):" 
@@ -260,6 +262,10 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="⬆️ Отступ сверху (px):" 
@@ -337,6 +343,8 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="🎬 Длительность появления (мс):" 
@@ -381,11 +389,29 @@
                  Text="8000" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
                  Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
 
-                                    <CheckBox Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2" 
+                                    <!-- Пресет физики -->
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="🧪 Пресет физики:" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <ComboBox Grid.Row="7" Grid.Column="1" x:Name="PhysicsPresetComboBox"
+                                              SelectedIndex="0" Margin="10,5" Padding="8"
+                                              Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2">
+                                        <ComboBoxItem Content="Natural"/>
+                                        <ComboBoxItem Content="Snappy"/>
+                                        <ComboBoxItem Content="Playful"/>
+                                    </ComboBox>
+
+                                    <CheckBox Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2" 
                                               x:Name="EnableAutoExpandCheckBox"
                                               Content="🔄 Включить автораскрытие"
                                               Foreground="White" 
                                               Margin="0,10,0,5"
+                                              FontSize="12"/>
+
+                                    <CheckBox Grid.Row="9" Grid.Column="0" Grid.ColumnSpan="2" 
+                                              x:Name="UsePhysicsForRepositionCheckBox"
+                                              Content="🧲 Физическое центрирование (пружина)"
+                                              Foreground="White" 
+                                              Margin="0,5,0,5"
                                               FontSize="12"/>
                                 </Grid>
                             </StackPanel>

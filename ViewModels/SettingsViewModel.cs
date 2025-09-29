@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Windows.Media;
 using DynaNoty.Configuration;
+using DynaNoty.Models;
 using DynaNoty.Interfaces;
 using Microsoft.Extensions.Logging;
 
@@ -69,6 +70,8 @@ namespace DynaNoty.ViewModels
         private int _expandedDisplayDuration;
         private int _fullyExpandedDisplayDuration;
         private bool _enableAutoExpand;
+        private int _physicsPreset;
+        private bool _usePhysicsForReposition;
 
         // Стили
         private Color _backgroundColor;
@@ -355,6 +358,18 @@ namespace DynaNoty.ViewModels
             set => SetProperty(ref _enableAutoExpand, value);
         }
 
+        public int PhysicsPreset
+        {
+            get => _physicsPreset;
+            set => SetProperty(ref _physicsPreset, value);
+        }
+
+        public bool UsePhysicsForReposition
+        {
+            get => _usePhysicsForReposition;
+            set => SetProperty(ref _usePhysicsForReposition, value);
+        }
+
         // Стили
         public Color BackgroundColor
         {
@@ -547,6 +562,8 @@ namespace DynaNoty.ViewModels
                 ExpandedDisplayDuration = _config.ExpandedDisplayDuration;
                 FullyExpandedDisplayDuration = _config.FullyExpandedDisplayDuration;
                 EnableAutoExpand = _config.EnableAutoExpand;
+                PhysicsPreset = (int)_config.PhysicsAnimations.Preset;
+                UsePhysicsForReposition = _config.PhysicsAnimations.UsePhysicsForReposition;
 
                 // Стили
                 BackgroundColor = _config.BackgroundColor;
@@ -641,6 +658,8 @@ namespace DynaNoty.ViewModels
                 _config.ExpandedDisplayDuration = ExpandedDisplayDuration;
                 _config.FullyExpandedDisplayDuration = FullyExpandedDisplayDuration;
                 _config.EnableAutoExpand = EnableAutoExpand;
+                _config.PhysicsAnimations.Preset = (PhysicsPreset)PhysicsPreset;
+                _config.PhysicsAnimations.UsePhysicsForReposition = UsePhysicsForReposition;
 
                 // Стили
                 _config.BackgroundColor = BackgroundColor;
@@ -743,7 +762,13 @@ namespace DynaNoty.ViewModels
         {
             try
             {
-                _notificationService.ShowNotification("Тест настроек", "Проверка новых параметров", "⚙️");
+                var actions = new List<NotificationAction>
+                {
+                    new NotificationAction("ok", "ОК", data: null, icon: "✅"),
+                    new NotificationAction("open", "Открыть", data: null, icon: "📂")
+                };
+
+                _notificationService.ShowNotification("Тест настроек", "Проверка новых параметров", "⚙️", actions);
                 _logger?.LogInformation("Тестовое уведомление отправлено");
             }
             catch (Exception ex)

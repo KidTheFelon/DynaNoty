@@ -74,6 +74,8 @@ namespace DynaNoty.Services
                 SetTextBoxValue(uiElements, "ExpandedDisplayDurationTextBox", viewModel.ExpandedDisplayDuration.ToString());
                 SetTextBoxValue(uiElements, "FullyExpandedDisplayDurationTextBox", viewModel.FullyExpandedDisplayDuration.ToString());
                 SetCheckBoxValue(uiElements, "EnableAutoExpandCheckBox", viewModel.EnableAutoExpand);
+                SetComboBoxValue(uiElements, "PhysicsPresetComboBox", viewModel.PhysicsPreset);
+                SetCheckBoxValue(uiElements, "UsePhysicsForRepositionCheckBox", viewModel.UsePhysicsForReposition);
 
                 // Стили
                 SetColorPickerValue(uiElements, "BackgroundColorPicker", viewModel.BackgroundColor);
@@ -153,6 +155,8 @@ namespace DynaNoty.Services
                 viewModel.ExpandedDisplayDuration = GetIntValue(uiElements, "ExpandedDisplayDurationTextBox");
                 viewModel.FullyExpandedDisplayDuration = GetIntValue(uiElements, "FullyExpandedDisplayDurationTextBox");
                 viewModel.EnableAutoExpand = GetCheckBoxValue(uiElements, "EnableAutoExpandCheckBox");
+                viewModel.PhysicsPreset = GetComboBoxValue(uiElements, "PhysicsPresetComboBox");
+                viewModel.UsePhysicsForReposition = GetCheckBoxValue(uiElements, "UsePhysicsForRepositionCheckBox");
 
                 // Стили
                 viewModel.BackgroundColor = GetColorPickerValue(uiElements, "BackgroundColorPicker");

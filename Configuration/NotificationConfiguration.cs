@@ -50,6 +50,11 @@ namespace DynaNoty.Configuration
         public NotificationPerformanceConfig Performance { get; set; } = new();
 
         /// <summary>
+        /// Конфигурация физических анимаций
+        /// </summary>
+        public PhysicsAnimationSettings PhysicsAnimations { get; set; } = new();
+
+        /// <summary>
         /// Продвинутые настройки
         /// </summary>
         public NotificationAdvancedConfig Advanced { get; set; } = new();

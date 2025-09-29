@@ -56,7 +56,7 @@ namespace DynaNoty.Services
             notification.RenderTransform = scaleTransform;
             notification.RenderTransformOrigin = new Point(0.5, 0.5);
 
-            // Создаем анимации
+            // Создаем анимации с поддержкой физики
             var animations = _animationFactory.CreateAppearAnimations();
 
             // Добавляем обработчик завершения анимации прозрачности
@@ -157,14 +157,9 @@ namespace DynaNoty.Services
                 // Анимируем позицию только если она изменится
                 if (Math.Abs(currentLeft - targetLeft) > 1)
                 {
-                    leftAnimation = new DoubleAnimation(
-                        currentLeft,
-                        targetLeft,
-                        TimeSpan.FromMilliseconds(_config.ExpandAnimationDuration))
-                    {
-                        EasingFunction = new CubicEase { EasingMode = EasingMode.EaseOut }
-                    };
-                    _logger?.LogDebug("Создана анимация позиции: от {CurrentLeft} до {TargetLeft}", currentLeft, targetLeft);
+                    // Используем фабрику (с учетом UsePhysicsForReposition)
+                    leftAnimation = _animationFactory.CreateRepositionAnimation(currentLeft, targetLeft);
+                    _logger?.LogDebug("Создана анимация позиции (factory): от {CurrentLeft} до {TargetLeft}", currentLeft, targetLeft);
                 }
                 else
                 {
@@ -173,6 +168,8 @@ namespace DynaNoty.Services
             }
 
             // Создаем все анимации
+            // Создаем анимации с поддержкой физики
+            var usePhysics = _config.PhysicsAnimations.UsePhysicsForExpand;
             var widthAnimation = CreateWidthAnimation(
                 _config.MinNotificationWidth,
                 _config.MaxNotificationWidth,
