@@ -19,6 +19,8 @@ namespace DynaNoty.Services
         private readonly string _configPath;
         private NotificationConfiguration _currentConfig;
         private bool _disposed = false;
+        private readonly object _reloadLock = new object();
+        private System.Threading.CancellationTokenSource _reloadCts;
 
         public event EventHandler<ConfigurationChangedEventArgs> ConfigurationChanged;
 
@@ -182,17 +184,38 @@ namespace DynaNoty.Services
             }
         }
 
-        private async void OnConfigFileChanged(object sender, FileSystemEventArgs e)
+        private void OnConfigFileChanged(object sender, FileSystemEventArgs e)
         {
             try
             {
-                // Небольшая задержка, чтобы файл успел освободиться
-                await Task.Delay(100);
-                await LoadConfigurationAsync();
+                lock (_reloadLock)
+                {
+                    _reloadCts?.Cancel();
+                    _reloadCts?.Dispose();
+                    _reloadCts = new System.Threading.CancellationTokenSource();
+                    var token = _reloadCts.Token;
+
+                    _ = Task.Run(async () =>
+                    {
+                        try
+                        {
+                            await Task.Delay(200, token); // debounce
+                            await LoadConfigurationAsync();
+                        }
+                        catch (OperationCanceledException)
+                        {
+                            // игнорируем отмененные дебаунсы
+                        }
+                        catch (Exception ex)
+                        {
+                            _logger?.LogError(ex, "Ошибка обработки изменения файла конфигурации");
+                        }
+                    }, token);
+                }
             }
             catch (Exception ex)
             {
-                _logger?.LogError(ex, "Ошибка обработки изменения файла конфигурации");
+                _logger?.LogError(ex, "Ошибка планирования перезагрузки конфигурации");
             }
         }
 
@@ -200,6 +223,21 @@ namespace DynaNoty.Services
         {
             if (!_disposed)
             {
+                lock (_reloadLock)
+                {
+                    _reloadCts?.Cancel();
+                    _reloadCts?.Dispose();
+                    _reloadCts = null;
+                }
+                if (_fileWatcher != null)
+                {
+                    try
+                    {
+                        _fileWatcher.Changed -= OnConfigFileChanged;
+                        _fileWatcher.Created -= OnConfigFileChanged;
+                    }
+                    catch { }
+                }
                 _fileWatcher?.Dispose();
                 _disposed = true;
                 _logger?.LogDebug("ConfigurationProvider освобожден");

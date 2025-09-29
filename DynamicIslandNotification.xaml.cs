@@ -114,7 +114,7 @@ namespace DynaNoty
             // Применяем новые цвета в UI потоке
             if (Dispatcher.Thread != System.Threading.Thread.CurrentThread)
             {
-                Dispatcher.Invoke(() => ApplyColors());
+                Dispatcher.BeginInvoke(new Action(() => ApplyColors()), DispatcherPriority.Background);
             }
             else
             {
@@ -274,7 +274,7 @@ namespace DynaNoty
             // Оптимизированная проверка UI потока
             if (Dispatcher.Thread != System.Threading.Thread.CurrentThread)
             {
-                Dispatcher.Invoke(() => ApplyColors());
+                Dispatcher.BeginInvoke(new Action(() => ApplyColors()), DispatcherPriority.Background);
                 return;
             }
 
@@ -288,7 +288,7 @@ namespace DynaNoty
             // Оптимизированная проверка UI потока
             if (Dispatcher.Thread != System.Threading.Thread.CurrentThread)
             {
-                Dispatcher.Invoke(() => ShowNotification(title, subtitle, icon, showAction, actions));
+                Dispatcher.BeginInvoke(new Action(() => ShowNotification(title, subtitle, icon, showAction, actions)), DispatcherPriority.Background);
                 return;
             }
 
@@ -392,7 +392,7 @@ namespace DynaNoty
             // Оптимизированная проверка UI потока
             if (Dispatcher.Thread != System.Threading.Thread.CurrentThread)
             {
-                Dispatcher.Invoke(() => ShowCompact(icon));
+                Dispatcher.BeginInvoke(new Action(() => ShowCompact(icon)), DispatcherPriority.Background);
                 return;
             }
 

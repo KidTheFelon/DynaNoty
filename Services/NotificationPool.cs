@@ -188,23 +188,15 @@ namespace DynaNoty.Services
                 }
                 else
                 {
-                    // Fallback - выполняем сброс синхронно
-                    _logger?.LogWarning("UI поток недоступен, выполняем сброс синхронно");
-                    PerformReset(notification);
+                    // Fallback - UI поток недоступен: не выполняем UI-операции
+                    _logger?.LogWarning("UI поток недоступен, откладываем сброс состояния уведомления");
+                    return;
                 }
             }
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Ошибка при сбросе уведомления");
-                // Последняя попытка сброса без UI потока
-                try
-                {
-                    PerformReset(notification);
-                }
-                catch (Exception resetEx)
-                {
-                    _logger?.LogError(resetEx, "Критическая ошибка при сбросе уведомления");
-                }
+                // Не повторяем сброс вне UI-потока
             }
         }
 

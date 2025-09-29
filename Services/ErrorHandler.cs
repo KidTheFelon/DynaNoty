@@ -76,7 +76,7 @@ namespace DynaNoty.Services
                     if (attempt < _maxRetries)
                     {
                         var delay = CalculateDelay(attempt);
-                        System.Threading.Thread.Sleep(delay);
+                        Task.Delay(delay).Wait();
                     }
                 }
             }

@@ -93,7 +93,7 @@ namespace DynaNoty.Services
 
                     if (attempt < maxRetries)
                     {
-                        System.Threading.Thread.Sleep(delayMs * attempt);
+                        Task.Delay(delayMs * attempt).Wait();
                     }
                 }
             }
@@ -121,7 +121,7 @@ namespace DynaNoty.Services
 
                     if (attempt < maxRetries)
                     {
-                        System.Threading.Thread.Sleep(delayMs * attempt);
+                        Task.Delay(delayMs * attempt).Wait();
                     }
                 }
             }
