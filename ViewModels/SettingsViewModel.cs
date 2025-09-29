@@ -626,7 +626,7 @@ namespace DynaNoty.ViewModels
             try
             {
                 var defaultConfig = new NotificationConfiguration();
-                
+
                 // Копируем значения по умолчанию
                 AutoHideTimeout = defaultConfig.AutoHideTimeoutSeconds;
                 MaxNotifications = defaultConfig.MaxNotifications;

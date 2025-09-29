@@ -22,7 +22,7 @@ namespace DynaNoty.Services
         private List<NotificationAction> _actions = new List<NotificationAction>();
 
         public NotificationUIManager(
-            NotificationConfiguration config, 
+            NotificationConfiguration config,
             ISystemThemeService themeService,
             ILogger logger = null)
         {
@@ -35,17 +35,17 @@ namespace DynaNoty.Services
         /// Настраивает содержимое уведомления
         /// </summary>
         public void SetupContent(
-            TextBlock titleText, 
-            TextBlock subText, 
-            TextBlock iconText, 
-            string title, 
-            string subtitle, 
+            TextBlock titleText,
+            TextBlock subText,
+            TextBlock iconText,
+            string title,
+            string subtitle,
             string icon)
         {
             titleText.Text = title;
             subText.Text = subtitle;
             iconText.Text = icon;
-            
+
             _logger?.LogDebug("Содержимое уведомления настроено: {Title} - {Subtitle}", title, subtitle);
         }
 
@@ -62,15 +62,15 @@ namespace DynaNoty.Services
         /// Применяет цвета к элементам UI
         /// </summary>
         public void ApplyColors(
-            Border mainBorder, 
-            TextBlock titleText, 
-            TextBlock subText, 
+            Border mainBorder,
+            TextBlock titleText,
+            TextBlock subText,
             TextBlock iconText,
             FrameworkElement iconContainer,
             Button actionButton)
         {
             var colors = GetThemeColors();
-            
+
             mainBorder.Background = new SolidColorBrush(colors.BackgroundColor);
             titleText.Foreground = new SolidColorBrush(colors.TextColor);
             subText.Foreground = new SolidColorBrush(colors.TextColor);
@@ -78,7 +78,7 @@ namespace DynaNoty.Services
 
             ApplyFontSizes(titleText, subText, iconText);
             ApplySizes(iconContainer, actionButton);
-            
+
             _logger?.LogDebug("Цвета применены к UI элементам");
         }
 
@@ -119,23 +119,23 @@ namespace DynaNoty.Services
         public void UpdateActionsPanel(StackPanel actionsPanel, EventHandler<NotificationActionEventArgs> actionClicked)
         {
             actionsPanel.Children.Clear();
-            
+
             if (_actions == null || _actions.Count == 0)
             {
                 actionsPanel.Visibility = Visibility.Collapsed;
                 _logger?.LogDebug("ActionsPanel скрыт - нет действий");
                 return;
             }
-            
+
             var actionsToShow = _actions.Take(2).ToList();
             _logger?.LogDebug("Показываем максимум 2 действия из {TotalCount}", _actions.Count);
-            
+
             foreach (var action in actionsToShow)
             {
                 var button = CreateActionButton(action, actionClicked);
                 actionsPanel.Children.Add(button);
             }
-            
+
             actionsPanel.Visibility = Visibility.Visible;
             actionsPanel.Opacity = 1.0;
             _logger?.LogDebug("ActionsPanel показан с {Count} кнопками", actionsPanel.Children.Count);
@@ -150,14 +150,14 @@ namespace DynaNoty.Services
             mainBorder.MinHeight = _config.MinNotificationHeight;
             mainBorder.ClearValue(FrameworkElement.HeightProperty);
             mainBorder.ClearValue(FrameworkElement.MaxHeightProperty);
-            
+
             userControl.MinHeight = _config.MinNotificationHeight;
             userControl.ClearValue(FrameworkElement.HeightProperty);
             userControl.ClearValue(FrameworkElement.MaxHeightProperty);
-            
+
             contentPanel.Visibility = Visibility.Collapsed;
             actionButton.Visibility = Visibility.Collapsed;
-            
+
             // В компактном состоянии иконка по центру
             if (iconContainer != null)
             {
@@ -173,16 +173,16 @@ namespace DynaNoty.Services
             mainBorder.Width = _config.MaxNotificationWidth;
             mainBorder.Height = _config.ExpandedNotificationHeight;
             mainBorder.MinHeight = _config.ExpandedNotificationHeight;
-            
+
             contentPanel.Visibility = Visibility.Visible;
             contentPanel.Opacity = 1.0;
-            
+
             if (actionButton != null)
             {
                 actionButton.Visibility = Visibility.Visible;
                 actionButton.Opacity = 1.0;
             }
-            
+
             // В расширенном состоянии иконка слева
             if (iconContainer != null)
             {
@@ -198,27 +198,27 @@ namespace DynaNoty.Services
             var baseHeight = _config.FullyExpandedBaseHeight;
             var actionsHeight = (_actions != null && _actions.Count > 0) ? _config.ActionsPanelHeight : 0.0;
             var calculatedHeight = baseHeight + actionsHeight;
-            
+
             mainBorder.Height = calculatedHeight;
             mainBorder.MinHeight = calculatedHeight;
             mainBorder.ClearValue(FrameworkElement.MaxHeightProperty);
             mainBorder.Width = _config.MaxNotificationWidth;
-            
+
             contentPanel.Visibility = Visibility.Visible;
             contentPanel.Opacity = 1.0;
-            
+
             if (actionButton != null)
             {
                 actionButton.Visibility = Visibility.Visible;
                 actionButton.Opacity = 1.0;
             }
-            
+
             // В полностью раскрытом состоянии иконка слева
             if (iconContainer != null)
             {
                 Grid.SetColumn(iconContainer, 0); // Левая колонка
             }
-            
+
             _logger?.LogDebug("Установлен полностью раскрытый размер: {Height}px", calculatedHeight);
         }
 
@@ -237,7 +237,7 @@ namespace DynaNoty.Services
                 {
                     backgroundColor = _themeService.GetRecommendedBackgroundColor();
                 }
-                
+
                 if (_config.SystemSettingsOverride || textColor == Colors.White)
                 {
                     textColor = _themeService.GetRecommendedTextColor();
@@ -294,9 +294,9 @@ namespace DynaNoty.Services
                 Height = 32,
                 MinWidth = 80
             };
-            
+
             button.Click += (s, e) => actionClicked?.Invoke(s, new NotificationActionEventArgs(action.Id, action.Text, action.Data));
-            
+
             _logger?.LogDebug("Создана кнопка действия: {Content}", button.Content);
             return button;
         }
@@ -309,7 +309,7 @@ namespace DynaNoty.Services
             // Очищаем список действий
             _actions?.Clear();
             _actions = null;
-            
+
             _logger?.LogDebug("NotificationUIManager освобожден");
         }
     }

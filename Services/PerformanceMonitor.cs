@@ -20,7 +20,7 @@ namespace DynaNoty.Services
         public PerformanceMonitor(ILogger<PerformanceMonitor> logger = null)
         {
             _logger = logger;
-            
+
             // Отчет каждые 30 секунд
             _reportTimer = new Timer(ReportMetrics, null, TimeSpan.FromSeconds(30), TimeSpan.FromSeconds(30));
         }
@@ -79,10 +79,10 @@ namespace DynaNoty.Services
         {
             var counterName = $"{operationName}_duration_ms";
             IncrementCounter(counterName, (long)duration.TotalMilliseconds);
-            
+
             var countName = $"{operationName}_count";
             IncrementCounter(countName);
-            
+
             _logger?.LogDebug("Операция {OperationName} выполнена за {Duration}ms", operationName, duration.TotalMilliseconds);
         }
 

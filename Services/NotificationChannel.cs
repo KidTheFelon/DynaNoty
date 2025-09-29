@@ -22,7 +22,7 @@ namespace DynaNoty.Services
         public NotificationChannel(ILogger<NotificationChannel> logger = null)
         {
             _logger = logger;
-            
+
             var options = new BoundedChannelOptions(1000) // Максимум 1000 уведомлений в очереди
             {
                 FullMode = BoundedChannelFullMode.Wait, // Ждем, если очередь полная

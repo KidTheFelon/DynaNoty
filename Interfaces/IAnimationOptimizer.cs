@@ -12,7 +12,7 @@ namespace DynaNoty.Interfaces
         /// <summary>
         /// Плавная анимация свойства с использованием CompositionTarget
         /// </summary>
-        void AnimateProperty<T>(DependencyObject target, DependencyProperty property, 
+        void AnimateProperty<T>(DependencyObject target, DependencyProperty property,
             T fromValue, T toValue, TimeSpan duration, Action<T> onUpdate, Action onCompleted = null);
     }
 }

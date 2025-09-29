@@ -22,7 +22,7 @@ namespace DynaNoty.Interfaces
         /// Анимированно перемещает уведомление в новую позицию
         /// </summary>
         void AnimateToPosition(UIElement notification, int index);
-        
+
         /// <summary>
         /// Пересчитывает позиции всех уведомлений с учетом их реальной высоты
         /// </summary>

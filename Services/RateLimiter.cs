@@ -62,17 +62,17 @@ namespace DynaNoty.Services
                 // Проверяем лимит
                 if (history.Count >= _maxRequests)
                 {
-                    _logger?.LogWarning("Rate limit превышен для ключа {Key}. Запросов: {Count}/{MaxRequests}", 
+                    _logger?.LogWarning("Rate limit превышен для ключа {Key}. Запросов: {Count}/{MaxRequests}",
                         key, history.Count, _maxRequests);
                     return false;
                 }
 
                 // Добавляем текущий запрос
                 history.Enqueue(now);
-                
-                _logger?.LogDebug("Запрос разрешен для ключа {Key}. Запросов: {Count}/{MaxRequests}", 
+
+                _logger?.LogDebug("Запрос разрешен для ключа {Key}. Запросов: {Count}/{MaxRequests}",
                     key, history.Count, _maxRequests);
-                
+
                 return true;
             }
         }
@@ -93,7 +93,7 @@ namespace DynaNoty.Services
 
                 var oldestRequest = history.Peek();
                 var timeUntilOldestExpires = (oldestRequest + _timeWindow) - DateTime.UtcNow;
-                
+
                 return timeUntilOldestExpires > TimeSpan.Zero ? timeUntilOldestExpires : TimeSpan.Zero;
             }
         }

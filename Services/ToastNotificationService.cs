@@ -29,7 +29,7 @@ namespace DynaNoty.Services
             _logger = logger;
             _activeNotifications = new Dictionary<string, BalloonIcon>();
             _taskbarIcon = new TaskbarIcon();
-            
+
             _logger?.LogInformation("ToastNotificationService инициализирован");
         }
 
@@ -52,13 +52,13 @@ namespace DynaNoty.Services
             try
             {
                 var balloonIcon = GetBalloonIcon(notificationData.Type);
-                
+
                 // Добавляем в словарь активных уведомлений
                 _activeNotifications[notificationData.Id] = balloonIcon;
 
                 // Показываем уведомление
                 _taskbarIcon.ShowBalloonTip(notificationData.Title, notificationData.Subtitle, balloonIcon);
-                
+
                 _logger?.LogInformation("Показано toast-уведомление: {Title}", notificationData.Title);
                 return Task.FromResult(notificationData.Id);
             }

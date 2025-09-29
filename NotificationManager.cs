@@ -62,7 +62,7 @@ namespace DynaNoty
                 throw new ArgumentNullException(nameof(dependencies));
 
             _config = dependencies.Config ?? new NotificationConfiguration();
-            
+
             // Валидация конфигурации
             ValidateConfiguration(_config);
             _logger = dependencies.Logger;
@@ -76,7 +76,7 @@ namespace DynaNoty
             _notificationWindow = dependencies.NotificationWindow ?? new NotificationWindow(_config);
             _lifecycleManager = dependencies.LifecycleManager ?? CreateDefaultLifecycleManager(_notificationWindow, _config, dependencies.LoggerFactory);
             _displayManager = dependencies.DisplayManager ?? CreateDefaultDisplayManager(_lifecycleManager, dependencies.LoggerFactory);
-            
+
             InitializeManager();
         }
 
@@ -126,18 +126,18 @@ namespace DynaNoty
             };
             _cleanupTimer.Tick += OnCleanupTimerTick;
             _cleanupTimer.Start();
-            
+
             // Инициализируем системные уведомления
             InitializeSystemNotifications();
-            
-            _logger?.LogInformation("NotificationManager инициализирован с конфигурацией: AutoHide={AutoHide}s, MaxWidth={MaxWidth}px, SystemNotifications={SystemNotifications}", 
+
+            _logger?.LogInformation("NotificationManager инициализирован с конфигурацией: AutoHide={AutoHide}s, MaxWidth={MaxWidth}px, SystemNotifications={SystemNotifications}",
                 _config.AutoHideTimeoutSeconds, _config.MaxNotificationWidth, _config.EnableSystemNotifications);
         }
 
         public void ShowNotification(string title, string subtitle, string icon = "🔔", List<NotificationAction> actions = null)
         {
             ThrowIfDisposed();
-            
+
             using (_performanceMonitor.StartTiming("ShowNotification"))
             {
                 _errorHandler.ExecuteWithRetry(() =>
@@ -160,7 +160,7 @@ namespace DynaNoty
         public void ShowMusicNotification(string title, string subtitle, string artist)
         {
             ThrowIfDisposed();
-            
+
             _errorHandler.ExecuteWithRetry(() =>
             {
                 if (!_rateLimiter.CanMakeRequest("music"))
@@ -178,7 +178,7 @@ namespace DynaNoty
         public void ShowCallNotification(string title, string caller, string icon = "📞")
         {
             ThrowIfDisposed();
-            
+
             _errorHandler.ExecuteWithRetry(() =>
             {
                 if (!_rateLimiter.CanMakeRequest("call"))
@@ -196,7 +196,7 @@ namespace DynaNoty
         public void ShowCompactNotification(string icon = "🔔")
         {
             ThrowIfDisposed();
-            
+
             _errorHandler.ExecuteWithRetry(() =>
             {
                 if (!_rateLimiter.CanMakeRequest("compact"))
@@ -215,7 +215,7 @@ namespace DynaNoty
         {
             // Показываем обычное уведомление
             await _displayManager.ShowNotificationAsync(notificationData, _config.MaxNotifications);
-            
+
             // Показываем системное уведомление, если включено
             if (ShouldShowSystemNotification(notificationData))
             {
@@ -243,7 +243,7 @@ namespace DynaNoty
                     return;
 
                 NotificationData notificationData = null;
-                
+
                 // Минимальная блокировка только для извлечения из очереди
                 lock (_queueProcessingLock)
                 {
@@ -267,20 +267,20 @@ namespace DynaNoty
                     catch (Exception ex)
                     {
                         _logger?.LogError(ex, "Ошибка обработки уведомления из очереди: {Title}", notificationData.Title);
-                        
+
                         // Повторно добавляем в очередь для повторной попытки (с ограничением и задержкой)
                         if (notificationData.RetryCount < 3)
                         {
                             notificationData.IncrementRetryCount();
-                            
-                        // Добавляем задержку перед повторной попыткой
-                        var delay = TimeSpan.FromMilliseconds(100 * notificationData.RetryCount);
-                        _ = Task.Delay(delay).ContinueWith(_ =>
-                        {
-                            _queue.Enqueue(notificationData);
-                            _logger?.LogInformation("Уведомление возвращено в очередь для повторной попытки. Попытка: {RetryCount}, задержка: {Delay}ms", 
-                                notificationData.RetryCount, delay.TotalMilliseconds);
-                        }, TaskScheduler.Default);
+
+                            // Добавляем задержку перед повторной попыткой
+                            var delay = TimeSpan.FromMilliseconds(100 * notificationData.RetryCount);
+                            _ = Task.Delay(delay).ContinueWith(_ =>
+                            {
+                                _queue.Enqueue(notificationData);
+                                _logger?.LogInformation("Уведомление возвращено в очередь для повторной попытки. Попытка: {RetryCount}, задержка: {Delay}ms",
+                                    notificationData.RetryCount, delay.TotalMilliseconds);
+                            }, TaskScheduler.Default);
                         }
                         else
                         {
@@ -305,7 +305,7 @@ namespace DynaNoty
                 {
                     return; // Не выполняем очистку если нет работы
                 }
-                
+
                 System.Diagnostics.Debug.WriteLine("OnCleanupTimerTick вызван");
                 _lifecycleManager.CleanupCompletedNotifications();
                 _ = ProcessQueue(); // Обрабатываем очередь при каждой очистке
@@ -319,15 +319,15 @@ namespace DynaNoty
         public void ClearAllNotifications()
         {
             ThrowIfDisposed();
-            
+
             try
             {
                 // Очищаем очередь
                 _queue.Clear();
-                
+
                 // Закрываем все активные уведомления
                 _lifecycleManager.ClearAllNotifications();
-                
+
                 _logger?.LogInformation("Очищены все уведомления и очередь");
             }
             catch (Exception ex)
@@ -345,19 +345,19 @@ namespace DynaNoty
         {
             if (config == null)
                 throw new ArgumentNullException(nameof(config));
-                
+
             if (config.MaxNotifications <= 0)
                 throw new ArgumentException("MaxNotifications должно быть больше 0", nameof(config));
-                
+
             if (config.AutoHideTimeoutSeconds <= 0)
                 throw new ArgumentException("AutoHideTimeoutSeconds должно быть больше 0", nameof(config));
-                
+
             if (config.MaxNotificationWidth <= 0)
                 throw new ArgumentException("MaxNotificationWidth должно быть больше 0", nameof(config));
-                
+
             if (config.MinNotificationWidth <= 0)
                 throw new ArgumentException("MinNotificationWidth должно быть больше 0", nameof(config));
-                
+
             if (config.MinNotificationWidth > config.MaxNotificationWidth)
                 throw new ArgumentException("MinNotificationWidth не может быть больше MaxNotificationWidth", nameof(config));
         }
@@ -444,7 +444,7 @@ namespace DynaNoty
         /// </summary>
         private void OnSystemNotificationActionClicked(object sender, SystemNotificationActionClickedEventArgs e)
         {
-            _logger?.LogInformation("Клик по действию системного уведомления: {NotificationId}, Action: {ActionId}", 
+            _logger?.LogInformation("Клик по действию системного уведомления: {NotificationId}, Action: {ActionId}",
                 e.NotificationId, e.ActionId);
             // Можно добавить дополнительную логику обработки действия
         }
@@ -459,16 +459,16 @@ namespace DynaNoty
         }
 
         private INotificationLifecycleManager CreateDefaultLifecycleManager(
-            INotificationWindow notificationWindow, 
-            NotificationConfiguration config, 
+            INotificationWindow notificationWindow,
+            NotificationConfiguration config,
             ILoggerFactory loggerFactory)
         {
-            var positioningService = new NotificationPositioningService(config, 
+            var positioningService = new NotificationPositioningService(config,
                 loggerFactory?.CreateLogger<NotificationPositioningService>());
-            var pool = new NotificationPool(config, 
-                new SystemThemeService(loggerFactory?.CreateLogger<SystemThemeService>()), 
+            var pool = new NotificationPool(config,
+                new SystemThemeService(loggerFactory?.CreateLogger<SystemThemeService>()),
                 loggerFactory?.CreateLogger<NotificationPool>());
-            
+
             return new NotificationLifecycleManager(
                 notificationWindow ?? new NotificationWindow(config),
                 positioningService,
@@ -484,19 +484,19 @@ namespace DynaNoty
             var validationService = new InputValidationService(
                 _config,
                 loggerFactory?.CreateLogger<InputValidationService>());
-            
+
             // Используем пул из переданного lifecycleManager
             var pool = lifecycleManager.GetPool();
-            
+
             var registry = new NotificationTypeHandlerRegistry(
                 loggerFactory?.CreateLogger<NotificationTypeHandlerRegistry>());
-            
+
             // Регистрируем обработчики
             registry.RegisterHandler(new Services.Handlers.CompactNotificationHandler());
             registry.RegisterHandler(new Services.Handlers.MusicNotificationHandler());
             registry.RegisterHandler(new Services.Handlers.CallNotificationHandler());
             registry.RegisterHandler(new Services.Handlers.StandardNotificationHandler());
-            
+
             return new NotificationDisplayManager(
                 pool,
                 lifecycleManager,
@@ -512,9 +512,9 @@ namespace DynaNoty
                 _cleanupTimer?.Stop();
                 if (_cleanupTimer != null)
                     _cleanupTimer.Tick -= OnCleanupTimerTick;
-                
+
                 ClearAllNotifications();
-                
+
                 _displayManager?.Dispose();
                 _lifecycleManager?.Dispose();
                 _errorHandler?.Dispose();
@@ -522,7 +522,7 @@ namespace DynaNoty
                 _performanceMonitor?.Dispose();
                 _systemNotificationService?.Dispose();
                 _notificationWindow?.Dispose();
-                
+
                 _disposed = true;
                 _logger?.LogInformation("NotificationManager освобожден");
             }

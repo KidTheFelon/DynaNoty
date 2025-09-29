@@ -30,10 +30,10 @@ namespace DynaNoty.Services
             }
 
             _logger?.LogWarning("Обработчик для типа {Type} не найден, используется обработчик по умолчанию", type);
-            
+
             // Возвращаем обработчик по умолчанию (Standard)
-            return _handlers.TryGetValue(NotificationType.Standard, out var defaultHandler) 
-                ? defaultHandler 
+            return _handlers.TryGetValue(NotificationType.Standard, out var defaultHandler)
+                ? defaultHandler
                 : throw new InvalidOperationException($"Обработчик для типа {type} не найден и нет обработчика по умолчанию");
         }
 
@@ -54,19 +54,19 @@ namespace DynaNoty.Services
                     if (handler.Priority > existingHandler.Priority)
                     {
                         _handlers[type] = handler;
-                        _logger?.LogDebug("Обработчик для типа {Type} заменен на новый с приоритетом {Priority}", 
+                        _logger?.LogDebug("Обработчик для типа {Type} заменен на новый с приоритетом {Priority}",
                             type, handler.Priority);
                     }
                     else
                     {
-                        _logger?.LogDebug("Обработчик для типа {Type} не заменен, приоритет {Priority} <= {ExistingPriority}", 
+                        _logger?.LogDebug("Обработчик для типа {Type} не заменен, приоритет {Priority} <= {ExistingPriority}",
                             type, handler.Priority, existingHandler.Priority);
                     }
                 }
                 else
                 {
                     _handlers[type] = handler;
-                    _logger?.LogDebug("Зарегистрирован обработчик для типа {Type} с приоритетом {Priority}", 
+                    _logger?.LogDebug("Зарегистрирован обработчик для типа {Type} с приоритетом {Priority}",
                         type, handler.Priority);
                 }
             }

@@ -26,12 +26,12 @@ namespace DynaNoty.Services
         {
             _logger = logger;
             _toastService = new ToastNotificationService();
-            
+
             // Подписываемся на события toast-сервиса
             _toastService.NotificationClicked += (s, e) => NotificationClicked?.Invoke(s, e);
             _toastService.ActionClicked += (s, e) => ActionClicked?.Invoke(s, e);
             _toastService.NotificationDismissed += (s, e) => NotificationDismissed?.Invoke(s, e);
-            
+
             _logger?.LogInformation("SystemNotificationService инициализирован с ToastNotificationService");
         }
 

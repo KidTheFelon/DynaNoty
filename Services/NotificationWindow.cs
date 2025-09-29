@@ -19,7 +19,7 @@ namespace DynaNoty.Services
         public NotificationWindow(NotificationConfiguration config = null)
         {
             _config = config ?? new NotificationConfiguration();
-            
+
             _container = new Canvas
             {
                 Width = SystemParameters.PrimaryScreenWidth,
@@ -50,11 +50,11 @@ namespace DynaNoty.Services
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(NotificationWindow));
-                
+
             System.Diagnostics.Debug.WriteLine($"NotificationWindow.Show() вызван. Окно видимо: {_window.Visibility}");
-            
+
             _window.Show();
-            
+
             System.Diagnostics.Debug.WriteLine($"NotificationWindow показан. Видимость: {_window.Visibility}, Детей в контейнере: {_container.Children.Count}");
         }
 
@@ -62,7 +62,7 @@ namespace DynaNoty.Services
         {
             if (_disposed)
                 throw new ObjectDisposedException(nameof(NotificationWindow));
-                
+
             _window.Hide();
         }
 

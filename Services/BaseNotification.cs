@@ -81,7 +81,7 @@ namespace DynaNoty.Services
         {
             System.Diagnostics.Debug.WriteLine("=== BaseNotification.AnimateDismiss НАЧАЛО ===");
             System.Diagnostics.Debug.WriteLine($"EnableAnimations: {_config.EnableAnimations}");
-            
+
             if (!_config.EnableAnimations)
             {
                 System.Diagnostics.Debug.WriteLine("Анимации отключены, мгновенное закрытие");
@@ -98,14 +98,14 @@ namespace DynaNoty.Services
             // Используем настройку длительности анимации закрытия
             var dismissDuration = _config.DismissAnimationDuration;
             System.Diagnostics.Debug.WriteLine($"Параметры: Duration={dismissDuration}ms, SlideDistance={_config.DismissSlideDistance}px");
-            
+
             // Останавливаем анимации позиционирования и фиксируем горизонтальную позицию
             this.BeginAnimation(Canvas.LeftProperty, null);
             this.BeginAnimation(Canvas.TopProperty, null);
             System.Diagnostics.Debug.WriteLine("BaseNotification.AnimateDismiss: Остановлены анимации позиционирования");
             Canvas.SetLeft(this, originalLeft);
             System.Diagnostics.Debug.WriteLine($"BaseNotification.AnimateDismiss: Зафиксирована позиция Left={originalLeft}");
-            
+
             // Создаем анимацию сдвига вверх с прозрачностью
             var opacityAnimation = new DoubleAnimation(1, 0, TimeSpan.FromMilliseconds(dismissDuration))
             {
@@ -129,10 +129,10 @@ namespace DynaNoty.Services
                 System.Diagnostics.Debug.WriteLine("Запускаем анимации...");
                 this.BeginAnimation(OpacityProperty, opacityAnimation);
                 System.Diagnostics.Debug.WriteLine("Запущена анимация прозрачности");
-                
+
                 this.BeginAnimation(Canvas.TopProperty, topAnimation);
                 System.Diagnostics.Debug.WriteLine("Запущена анимация сдвига");
-                
+
                 System.Diagnostics.Debug.WriteLine("=== АНИМАЦИИ ЗАПУЩЕНЫ УСПЕШНО ===");
             }
             catch (Exception ex)

@@ -22,7 +22,7 @@ namespace DynaNoty
             _notificationService = notificationService ?? throw new System.ArgumentNullException(nameof(notificationService));
             _logger = logger;
             _serviceProvider = serviceProvider;
-            
+
             // Позиционируем окно в верхней части экрана
             this.Left = SystemParameters.PrimaryScreenWidth - this.Width - 20;
             this.Top = 20;
@@ -39,11 +39,11 @@ namespace DynaNoty
                 _logger?.LogInformation("Попытка показать тестовое уведомление");
                 _notificationService.ShowNotification("Test Notification", "This is a test notification from DynaNoty!");
                 _logger?.LogInformation("Тестовое уведомление отправлено в очередь");
-                
+
                 // Проверяем количество активных уведомлений
                 var activeCount = _notificationService.ActiveNotificationCount;
                 _logger?.LogInformation($"Активных уведомлений: {activeCount}");
-                
+
                 MessageBox.Show($"Уведомление отправлено! Активных: {activeCount}", "Тест", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (System.Exception ex)
@@ -87,13 +87,13 @@ namespace DynaNoty
             try
             {
                 var subtitle = "От: Иван Петров\nЭто детальное описание уведомления. Кликните по уведомлению, чтобы увидеть полный текст и дополнительные действия.";
-                
+
                 _notificationService.ShowNotification(
-                    "📧 Новое сообщение", 
-                    subtitle, 
+                    "📧 Новое сообщение",
+                    subtitle,
                     "📧"
                 );
-                
+
                 MessageBox.Show("Уведомление с детальным текстом отправлено! Кликните по нему для раскрытия.", "Тест", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -117,12 +117,12 @@ namespace DynaNoty
                 var subtitle = "Группа: Разработчики\nУ вас новое сообщение в чате. Вы можете ответить, отметить как прочитанное или удалить.";
 
                 _notificationService.ShowNotification(
-                    "💬 Новое сообщение в чате", 
-                    subtitle, 
-                    "💬", 
+                    "💬 Новое сообщение в чате",
+                    subtitle,
+                    "💬",
                     actions
                 );
-                
+
                 MessageBox.Show("Уведомление с действиями отправлено! Кликните по нему для раскрытия и взаимодействия.", "Тест", MessageBoxButton.OK, MessageBoxImage.Information);
             }
             catch (Exception ex)
@@ -161,19 +161,19 @@ namespace DynaNoty
             {
                 _logger?.LogError(ex, "Ошибка очистки уведомлений");
             }
-            
+
             Application.Current.Shutdown();
         }
 
         private void OnNotificationDismissed(object sender, Events.NotificationDismissedEventArgs e)
         {
-            _logger?.LogDebug("Уведомление {NotificationId} закрыто в {DismissedAt}", 
+            _logger?.LogDebug("Уведомление {NotificationId} закрыто в {DismissedAt}",
                 e.NotificationId, e.DismissedAt);
         }
 
         private void OnNotificationActionClicked(object sender, Models.NotificationActionEventArgs e)
         {
-            _logger?.LogDebug("Нажато действие {ActionId} - {ActionText}", 
+            _logger?.LogDebug("Нажато действие {ActionId} - {ActionText}",
                 e.ActionId, e.ActionText);
         }
 
@@ -185,7 +185,7 @@ namespace DynaNoty
                 _notificationService.NotificationDismissed -= OnNotificationDismissed;
                 _notificationService.NotificationActionClicked -= OnNotificationActionClicked;
             }
-            
+
             base.OnClosed(e);
         }
     }

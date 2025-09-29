@@ -96,7 +96,7 @@ namespace DynaNoty.Services
                     else
                     {
                         // Fallback: определяем по системным цветам
-                        _isDarkTheme = SystemParameters.WindowGlassBrush is SolidColorBrush brush && 
+                        _isDarkTheme = SystemParameters.WindowGlassBrush is SolidColorBrush brush &&
                                      brush.Color.R + brush.Color.G + brush.Color.B < 384; // 384 = 128*3
                         _logger?.LogDebug("Системная тема определена через fallback: {Theme}", _isDarkTheme ? "Темная" : "Светлая");
                     }
@@ -153,17 +153,17 @@ namespace DynaNoty.Services
         {
             var oldTheme = _isDarkTheme;
             var oldAccent = _accentColor;
-            
+
             DetectSystemTheme();
             DetectAccentColor();
-            
+
             // Проверяем, изменилась ли тема или акцентный цвет
             if (oldTheme != _isDarkTheme || oldAccent != _accentColor)
             {
                 SystemThemeChanged?.Invoke(this, System.EventArgs.Empty);
                 _logger?.LogInformation("Системная тема или акцентный цвет изменились");
             }
-            
+
             // Логируем только при изменениях
             if (oldTheme != _isDarkTheme || oldAccent != _accentColor)
             {
@@ -184,7 +184,7 @@ namespace DynaNoty.Services
                 };
                 _themeCheckTimer.Tick += OnThemeCheckTimerTick;
                 _themeCheckTimer.Start();
-                
+
                 _logger?.LogDebug("Мониторинг системной темы настроен");
             }
             catch (Exception ex)

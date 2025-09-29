@@ -41,7 +41,7 @@ namespace DynaNoty.Services
 
             var oldState = CurrentState;
             CurrentState = newState;
-            
+
             _logger?.LogDebug("Состояние уведомления изменено: {OldState} -> {NewState}", oldState, newState);
             StateChanged?.Invoke(this, EventArgs.Empty);
         }
@@ -61,7 +61,7 @@ namespace DynaNoty.Services
             };
             _expandTimer.Tick += OnExpandTimerTick;
             _expandTimer.Start();
-            
+
             System.Diagnostics.Debug.WriteLine($"Таймер расширения запущен с интервалом {_config.ExpandDelay}ms");
             _logger?.LogInformation("Таймер расширения запущен с интервалом {Delay}ms", _config.ExpandDelay);
         }
@@ -85,18 +85,18 @@ namespace DynaNoty.Services
         public void StartAutoHideTimer()
         {
             if (_disposed) return;
-            
+
             StopAutoHideTimer();
-            
+
             var displayDuration = GetDisplayDuration();
-            
-            _autoHideTimer = new DispatcherTimer 
-            { 
-                Interval = TimeSpan.FromMilliseconds(displayDuration) 
+
+            _autoHideTimer = new DispatcherTimer
+            {
+                Interval = TimeSpan.FromMilliseconds(displayDuration)
             };
             _autoHideTimer.Tick += OnAutoHideTimerTick;
             _autoHideTimer.Start();
-            
+
             System.Diagnostics.Debug.WriteLine($"Таймер автоскрытия запущен с интервалом {displayDuration}мс (состояние: {CurrentState})");
             _logger?.LogInformation("Таймер автоскрытия запущен с интервалом {Duration}мс (состояние: {State})", displayDuration, CurrentState);
         }
@@ -144,14 +144,14 @@ namespace DynaNoty.Services
             System.Diagnostics.Debug.WriteLine("Таймер расширения сработал");
             _logger?.LogInformation("Таймер расширения сработал");
             StopExpandTimer();
-            
+
             ChangeState(NotificationState.Expanded);
         }
 
         private void OnAutoHideTimerTick(object sender, EventArgs e)
         {
             if (_disposed) return;
-            
+
             _logger?.LogDebug("Таймер автоскрытия сработал");
             StopAutoHideTimer();
             AutoHideTriggered?.Invoke(this, EventArgs.Empty);

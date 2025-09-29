@@ -83,15 +83,15 @@ namespace DynaNoty.Services
             double currentHeight, double targetHeight)
         {
             var widthAnimation = CreateWidthAnimation(
-                _config.MinNotificationWidth, 
-                _config.MaxNotificationWidth, 
+                _config.MinNotificationWidth,
+                _config.MaxNotificationWidth,
                 _config.ExpandAnimationDuration);
 
             var heightAnimation = CreateHeightAnimation(currentHeight, targetHeight, _config.ExpandAnimationDuration);
-            
+
             var contentOpacityAnimation = CreateOpacityAnimation(0, 1, _config.ExpandAnimationDuration);
             contentOpacityAnimation.BeginTime = TimeSpan.FromMilliseconds(200);
-            
+
             var actionOpacityAnimation = CreateOpacityAnimation(0, 1, _config.ExpandAnimationDuration);
             actionOpacityAnimation.BeginTime = TimeSpan.FromMilliseconds(300);
 
@@ -104,8 +104,8 @@ namespace DynaNoty.Services
         public (DoubleAnimation Width, DoubleAnimation ContentOpacity) CreateCompactAnimations()
         {
             var widthAnimation = CreateWidthAnimation(
-                _config.MaxNotificationWidth, 
-                _config.MinNotificationWidth, 
+                _config.MaxNotificationWidth,
+                _config.MinNotificationWidth,
                 300);
 
             var contentOpacityAnimation = CreateOpacityAnimation(1, 0, 200);

@@ -60,7 +60,7 @@ namespace DynaNoty.Services
                 var validationResult = _validator.ValidateAndFix(newConfig);
                 if (!validationResult.IsValid)
                 {
-                    _logger?.LogError("Конфигурация не прошла валидацию: {Errors}", 
+                    _logger?.LogError("Конфигурация не прошла валидацию: {Errors}",
                         string.Join(", ", validationResult.Errors));
                     return false;
                 }

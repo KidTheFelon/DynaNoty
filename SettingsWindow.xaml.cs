@@ -24,14 +24,14 @@ namespace DynaNoty
         {
             InitializeComponent();
             _logger = logger;
-            
+
             _viewModel = new SettingsViewModel(config, notificationService, logger);
             _validator = new SettingsValidator(logger);
             _mapper = new SettingsMapper(logger);
-            
+
             InitializeUI();
             LoadSettings();
-            
+
             // Добавляем поддержку навигации по клавишам
             this.KeyDown += SettingsWindow_KeyDown;
         }
@@ -139,7 +139,7 @@ namespace DynaNoty
         {
             // Обработчик изменения темы
             ThemeComboBox.SelectionChanged += ThemeComboBox_SelectionChanged;
-            
+
             // Обработчики изменения цветов
             BackgroundColorPicker.SelectedColorChanged += ColorPicker_SelectionChanged;
             TextColorPicker.SelectedColorChanged += ColorPicker_SelectionChanged;
@@ -184,7 +184,7 @@ namespace DynaNoty
             {
                 // Применяем настройки временно для теста
                 SaveSettings();
-                
+
                 // Показываем тестовое уведомление
                 _viewModel.SendTestNotification();
                 ShowSuccessMessage("Тестовое уведомление отправлено!");
@@ -200,15 +200,15 @@ namespace DynaNoty
         {
             try
             {
-                var result = MessageBox.Show("Сбросить все настройки к значениям по умолчанию?", 
+                var result = MessageBox.Show("Сбросить все настройки к значениям по умолчанию?",
                     "Подтверждение", MessageBoxButton.YesNo, MessageBoxImage.Question);
-                
+
                 if (result == MessageBoxResult.Yes)
                 {
                     _viewModel.ResetToDefaults();
                     _mapper.MapViewModelToUI(_viewModel, _uiElements);
                     UpdateColorControlsVisibility((Configuration.NotificationTheme)_viewModel.Theme);
-                    
+
                     _logger?.LogInformation("Настройки сброшены к значениям по умолчанию");
                     ShowSuccessMessage("Настройки сброшены к значениям по умолчанию!");
                 }
@@ -285,7 +285,7 @@ namespace DynaNoty
                 // Применяем выбранную тему
                 var selectedTheme = (Configuration.NotificationTheme)ThemeComboBox.SelectedIndex;
                 ApplyTheme(selectedTheme);
-                
+
                 _logger?.LogInformation($"Применена тема: {selectedTheme}");
                 ShowSuccessMessage($"Тема '{GetThemeDisplayName(selectedTheme)}' применена!");
             }
@@ -311,49 +311,49 @@ namespace DynaNoty
                 case Configuration.NotificationTheme.System:
                     // Системная тема - используем текущие настройки
                     break;
-                    
+
                 case Configuration.NotificationTheme.Dark:
                     _viewModel.BackgroundColor = System.Windows.Media.Colors.Black;
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Light:
                     _viewModel.BackgroundColor = System.Windows.Media.Colors.White;
                     _viewModel.TextColor = System.Windows.Media.Colors.Black;
                     _viewModel.IconColor = System.Windows.Media.Colors.Black;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Blue:
                     _viewModel.BackgroundColor = System.Windows.Media.Color.FromRgb(0, 120, 255);
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Green:
                     _viewModel.BackgroundColor = System.Windows.Media.Color.FromRgb(52, 199, 89);
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Purple:
                     _viewModel.BackgroundColor = System.Windows.Media.Color.FromRgb(175, 82, 222);
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Orange:
                     _viewModel.BackgroundColor = System.Windows.Media.Color.FromRgb(255, 149, 0);
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Pink:
                     _viewModel.BackgroundColor = System.Windows.Media.Color.FromRgb(255, 45, 85);
                     _viewModel.TextColor = System.Windows.Media.Colors.White;
                     _viewModel.IconColor = System.Windows.Media.Colors.White;
                     break;
-                    
+
                 case Configuration.NotificationTheme.Custom:
                     // Пользовательская тема - используем текущие настройки из конфигурации
                     // Не изменяем цвета, они уже установлены пользователем
@@ -361,18 +361,18 @@ namespace DynaNoty
                     _viewModel.AutoAdaptToSystemTheme = false;
                     break;
             }
-            
+
             // Обновляем UI с новыми цветами (только для готовых тем)
             if (theme != Configuration.NotificationTheme.Custom)
             {
                 // Включаем автоматическую подстройку для готовых тем
                 _viewModel.AutoAdaptToSystemTheme = true;
-                
+
                 BackgroundColorPicker.SelectedColor = _viewModel.BackgroundColor;
                 TextColorPicker.SelectedColor = _viewModel.TextColor;
                 IconColorPicker.SelectedColor = _viewModel.IconColor;
             }
-            
+
             // Обновляем предварительный просмотр
             UpdateThemePreview();
         }
@@ -391,10 +391,10 @@ namespace DynaNoty
                     _viewModel.TextColor = TextColorPicker.SelectedColor.Value;
                 if (IconColorPicker.SelectedColor.HasValue)
                     _viewModel.IconColor = IconColorPicker.SelectedColor.Value;
-                
+
                 // Отключаем автоматическую подстройку при ручном изменении цветов
                 _viewModel.AutoAdaptToSystemTheme = false;
-                
+
                 // Обновляем предварительный просмотр
                 UpdateThemePreview();
             }
@@ -412,7 +412,7 @@ namespace DynaNoty
             try
             {
                 bool showColorControls = (theme == Configuration.NotificationTheme.Custom);
-                
+
                 // Управляем видимостью секции цветовой схемы
                 if (ColorSchemeSection != null)
                 {
@@ -506,10 +506,10 @@ namespace DynaNoty
 
             // Активируем выбранную кнопку и ScrollViewer
             activeButton.Background = new System.Windows.Media.SolidColorBrush((System.Windows.Media.Color)System.Windows.Media.ColorConverter.ConvertFromString("#FF007AFF"));
-            
+
             // Прокручиваем к активной вкладке, если она не видна
             ScrollToActiveTab(activeButton);
-            
+
             // Определяем какой ScrollViewer показать
             if (activeContent == MainTabContent)
                 MainScrollViewer.Visibility = Visibility.Visible;
@@ -579,14 +579,14 @@ namespace DynaNoty
             try
             {
                 // Ctrl + Tab - следующая вкладка
-                if (e.Key == System.Windows.Input.Key.Tab && 
+                if (e.Key == System.Windows.Input.Key.Tab &&
                     (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
                 {
                     NavigateToNextTab();
                     e.Handled = true;
                 }
                 // Ctrl + Shift + Tab - предыдущая вкладка
-                else if (e.Key == System.Windows.Input.Key.Tab && 
+                else if (e.Key == System.Windows.Input.Key.Tab &&
                          (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control &&
                          (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Shift) == System.Windows.Input.ModifierKeys.Shift)
                 {

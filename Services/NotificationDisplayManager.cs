@@ -45,7 +45,7 @@ namespace DynaNoty.Services
             // Валидация входных параметров
             if (notificationData == null)
                 throw new ArgumentNullException(nameof(notificationData));
-            
+
             if (maxNotifications <= 0)
                 throw new ArgumentException("Максимальное количество уведомлений должно быть больше 0", nameof(maxNotifications));
 
@@ -63,10 +63,10 @@ namespace DynaNoty.Services
                 {
                     System.Diagnostics.Debug.WriteLine($"Попытка {retryCount + 1} создания уведомления");
                     var notification = await CreateNotificationAsync(notificationData);
-                    
+
                     System.Diagnostics.Debug.WriteLine("Уведомление создано, добавляем в жизненный цикл");
                     _lifecycleManager.AddNotification(notification, maxNotifications);
-                    
+
                     System.Diagnostics.Debug.WriteLine("Уведомление успешно добавлено в жизненный цикл");
                     _logger?.LogInformation("Уведомление успешно показано (попытка {Attempt})", retryCount + 1);
                     return;
@@ -76,13 +76,13 @@ namespace DynaNoty.Services
                     retryCount++;
                     System.Diagnostics.Debug.WriteLine($"Ошибка показа уведомления (попытка {retryCount}): {ex.Message}");
                     _logger?.LogWarning(ex, "Ошибка показа уведомления (попытка {Attempt}/{MaxRetries})", retryCount, maxRetries);
-                    
+
                     if (retryCount >= maxRetries)
                     {
                         _logger?.LogError(ex, "Не удалось показать уведомление после {MaxRetries} попыток", maxRetries);
                         throw;
                     }
-                    
+
                     // Задержка перед повторной попыткой с экспоненциальным backoff
                     var delay = Math.Min(1000, 100 * (int)Math.Pow(2, retryCount - 1));
                     await Task.Delay(delay);
@@ -104,10 +104,10 @@ namespace DynaNoty.Services
             }
 
             var notificationId = Guid.NewGuid().ToString();
-            
+
             System.Diagnostics.Debug.WriteLine($"Создаем уведомление с ID: {notificationId} из пула");
             _logger?.LogDebug("Создаем уведомление с ID: {NotificationId} из пула", notificationId);
-            
+
             // Создаем обработчики событий
             EventHandler dismissedHandler = null;
             EventHandler actionClickedHandler = null;
@@ -122,7 +122,7 @@ namespace DynaNoty.Services
                         System.Diagnostics.Debug.WriteLine($"Уведомление {notificationId} закрыто");
                         _logger?.LogDebug("Уведомление {NotificationId} закрыто", notificationId);
                         NotificationDismissed?.Invoke(this, new NotificationDismissedEventArgs(notificationId));
-                        
+
                         // Удаляем уведомление из жизненного цикла
                         _lifecycleManager.RemoveNotification(notification);
                     }
@@ -151,7 +151,7 @@ namespace DynaNoty.Services
                         _logger?.LogError(ex, "Ошибка обработки действия для уведомления {NotificationId}", notificationId);
                     }
                 };
-                
+
                 // Подписываемся на события
                 notification.Dismissed += dismissedHandler;
                 notification.ActionClicked += actionClickedHandler;
@@ -160,10 +160,10 @@ namespace DynaNoty.Services
                 // Это должно выполняться в UI потоке
                 System.Diagnostics.Debug.WriteLine($"Получаем обработчик для типа: {notificationData.Type}");
                 var handler = _handlerRegistry.GetHandler(notificationData.Type);
-                
+
                 // Получаем UI поток
                 var dispatcher = GetUidispatcher();
-                
+
                 // Всегда используем асинхронный вызов для предотвращения deadlock
                 System.Diagnostics.Debug.WriteLine("Выполняем в UI потоке асинхронно");
                 await dispatcher.InvokeAsync(() =>
@@ -176,20 +176,20 @@ namespace DynaNoty.Services
                             _logger?.LogError("Уведомление равно null при показе");
                             throw new InvalidOperationException("Уведомление не может быть null");
                         }
-                        
+
                         if (handler == null)
                         {
                             _logger?.LogError("Обработчик уведомления равен null");
                             throw new InvalidOperationException("Обработчик уведомления не найден");
                         }
-                        
+
                         // Проверяем, что уведомление не удалено
                         if (notification.IsDisposed)
                         {
                             _logger?.LogWarning("Попытка показа удаленного уведомления");
                             return;
                         }
-                        
+
                         handler.ShowNotification(notification, notificationData);
                     }
                     catch (InvalidOperationException)
@@ -200,7 +200,7 @@ namespace DynaNoty.Services
                     catch (Exception ex)
                     {
                         _logger?.LogError(ex, "Ошибка показа уведомления в UI потоке: {Title}", notificationData.Title);
-                        
+
                         // Пытаемся показать fallback уведомление
                         try
                         {
@@ -239,7 +239,7 @@ namespace DynaNoty.Services
                     {
                         _logger?.LogWarning(cleanupEx, "Ошибка отписки от событий уведомления {NotificationId}", notificationId);
                     }
-                    
+
                     try
                     {
                         _pool.ReturnNotification(notification);
@@ -249,7 +249,7 @@ namespace DynaNoty.Services
                         _logger?.LogWarning(poolEx, "Ошибка возврата уведомления в пул {NotificationId}", notificationId);
                     }
                 }
-                
+
                 _logger?.LogError(ex, "Ошибка создания уведомления {NotificationId}", notificationId);
                 throw;
             }
@@ -263,13 +263,13 @@ namespace DynaNoty.Services
             try
             {
                 _logger?.LogInformation("Показываем fallback уведомление для: {Title}", notificationData.Title);
-                
+
                 // Простое уведомление без сложной логики
                 notification.ShowNotification(
-                    notificationData.Title ?? "Уведомление", 
-                    notificationData.Subtitle ?? "", 
-                    notificationData.Icon ?? "🔔", 
-                    false, 
+                    notificationData.Title ?? "Уведомление",
+                    notificationData.Subtitle ?? "",
+                    notificationData.Icon ?? "🔔",
+                    false,
                     null);
             }
             catch (Exception ex)
@@ -286,14 +286,14 @@ namespace DynaNoty.Services
         {
             // Используем Application.Current.Dispatcher как основной способ
             var dispatcher = System.Windows.Application.Current?.Dispatcher;
-            
+
             if (dispatcher == null)
             {
-                _logger?.LogError("UI поток недоступен для показа уведомления. Application.Current = {ApplicationCurrent}", 
+                _logger?.LogError("UI поток недоступен для показа уведомления. Application.Current = {ApplicationCurrent}",
                     System.Windows.Application.Current != null ? "not null" : "null");
                 throw new InvalidOperationException("UI поток недоступен для показа уведомления. Проверьте, что приложение запущено в WPF контексте.");
             }
-            
+
             return dispatcher;
         }
 

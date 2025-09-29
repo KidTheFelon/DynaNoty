@@ -43,7 +43,7 @@ namespace DynaNoty.Services
             }
 
             var sanitized = SanitizeString(input);
-            
+
             if (sanitized.Length > _maxStringLength)
             {
                 sanitized = sanitized.Substring(0, _maxStringLength);
@@ -67,7 +67,7 @@ namespace DynaNoty.Services
             }
 
             var sanitized = SanitizeString(icon);
-            
+
             if (sanitized.Length > _maxIconLength)
             {
                 sanitized = sanitized.Substring(0, _maxIconLength);
@@ -129,7 +129,7 @@ namespace DynaNoty.Services
         public string ValidateCompactNotification(string icon)
         {
             var validatedIcon = ValidateAndSanitizeIcon(icon, nameof(icon));
-            
+
             _logger?.LogDebug("Данные компактного уведомления успешно валидированы");
             return validatedIcon;
         }
@@ -144,10 +144,10 @@ namespace DynaNoty.Services
 
             // Удаляем HTML теги
             var sanitized = Regex.Replace(input, @"<[^>]+>", "");
-            
+
             // Удаляем скрипты
             sanitized = Regex.Replace(sanitized, @"<script[^>]*>.*?</script>", "", RegexOptions.IgnoreCase);
-            
+
             // Удаляем управляющие символы и потенциально опасные
             sanitized = sanitized.Trim()
                 .Replace("\r", "")

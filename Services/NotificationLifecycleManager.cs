@@ -27,15 +27,15 @@ namespace DynaNoty.Services
         public event EventHandler<NotificationDismissedEventArgs> NotificationDismissed;
         public event EventHandler<Models.NotificationActionEventArgs> NotificationActionClicked;
 
-        public int ActiveNotificationCount 
-        { 
-            get 
-            { 
-                lock (_lock) 
-                { 
-                    return _activeNotifications.Count; 
-                } 
-            } 
+        public int ActiveNotificationCount
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return _activeNotifications.Count;
+                }
+            }
         }
 
         public NotificationLifecycleManager(
@@ -63,7 +63,7 @@ namespace DynaNoty.Services
             _logger?.LogDebug("Добавляем уведомление в жизненный цикл. MaxNotifications: {MaxNotifications}", maxNotifications);
 
             var addResult = PrepareNotificationAddition(notification, maxNotifications);
-            
+
             try
             {
                 AddNotificationToUI(notification, addResult.NotificationIndex, addResult.ShouldShowWindow);
@@ -75,7 +75,7 @@ namespace DynaNoty.Services
                 RemoveNotificationFromList(notification);
                 throw;
             }
-            
+
             CleanupOldNotifications(addResult.ToRemove);
         }
 
@@ -88,32 +88,32 @@ namespace DynaNoty.Services
             List<DynamicIslandNotification> toRemove = null;
             bool shouldShowWindow = false;
             int notificationIndex = 0;
-            
+
             lock (_lock)
             {
                 // Очищаем старые уведомления, если их слишком много
                 if (_activeNotifications.Count >= maxNotifications)
                 {
                     toRemove = _activeNotifications.Take(_activeNotifications.Count - maxNotifications + 1).ToList();
-                    
+
                     // Удаляем из списка активных уведомлений
                     foreach (var oldNotification in toRemove)
                     {
                         _activeNotifications.Remove(oldNotification);
                     }
-                    
+
                     _logger?.LogDebug("Удалено {Count} старых уведомлений для освобождения места", toRemove.Count);
                 }
 
                 _activeNotifications.Add(notification);
                 notificationIndex = _activeNotifications.Count - 1;
-                
+
                 // Показываем окно, если это первое уведомление
                 if (_activeNotifications.Count == 1)
                 {
                     shouldShowWindow = true;
                 }
-                
+
                 _logger?.LogDebug("Уведомление добавлено. Всего активных: {Count}", _activeNotifications.Count);
             }
 
@@ -126,15 +126,15 @@ namespace DynaNoty.Services
         private void AddNotificationToUI(DynamicIslandNotification notification, int notificationIndex, bool shouldShowWindow)
         {
             _notificationWindow.Container.Children.Add(notification);
-            
+
             if (shouldShowWindow)
             {
                 _notificationWindow.Show();
                 _logger?.LogDebug("NotificationWindow показан при добавлении первого уведомления");
             }
-            
+
             _logger?.LogDebug("Уведомление добавлено в контейнер. Детей в контейнере: {Count}", _notificationWindow.Container.Children.Count);
-            
+
             // Убеждаемся, что уведомление видимо
             notification.Visibility = Visibility.Visible;
             notification.Opacity = 1.0;
@@ -150,30 +150,30 @@ namespace DynaNoty.Services
             {
                 dynamicNotification.SetPositioningService(_positioningService, notificationIndex);
             }
-            
+
             // Позиционируем уведомление после полной загрузки
             // Используем флаг для предотвращения множественных вызовов
             var isPositioned = false;
-            notification.Loaded += (s, e) => 
+            notification.Loaded += (s, e) =>
             {
                 if (isPositioned) return;
                 isPositioned = true;
-                
+
                 try
                 {
                     // Принудительно обновляем layout для получения актуальных размеров
                     notification.UpdateLayout();
-                    
+
                     // Позиционируем новое уведомление
                     _positioningService.PositionNotification(notification, notificationIndex);
-                    
+
                     // Пересчитываем позиции всех уведомлений для правильного размещения
                     if (_activeNotifications.Count > 1)
                     {
                         _positioningService.RecalculateAllPositions(_activeNotifications);
                         _logger?.LogDebug("Пересчитаны позиции всех уведомлений");
                     }
-                    
+
                     // Дополнительная проверка видимости всех уведомлений
                     ValidateNotificationsVisibility();
                 }
@@ -182,19 +182,19 @@ namespace DynaNoty.Services
                     _logger?.LogError(ex, "Ошибка позиционирования уведомления {Index} в обработчике Loaded", notificationIndex);
                 }
             };
-            
+
             // Если уведомление уже загружено, позиционируем сразу
             if (notification.IsLoaded)
             {
                 notification.UpdateLayout();
                 _positioningService.PositionNotification(notification, notificationIndex);
-                
+
                 if (_activeNotifications.Count > 1)
                 {
                     _positioningService.RecalculateAllPositions(_activeNotifications);
                     _logger?.LogDebug("Пересчитаны позиции всех уведомлений");
                 }
-                
+
                 ValidateNotificationsVisibility();
             }
         }
@@ -210,7 +210,7 @@ namespace DynaNoty.Services
                 var notif = _activeNotifications[i];
                 var top = System.Windows.Controls.Canvas.GetTop(notif);
                 var left = System.Windows.Controls.Canvas.GetLeft(notif);
-                _logger?.LogDebug("Уведомление {Index}: Visibility={Visibility}, Opacity={Opacity}, Top={Top}, Left={Left}", 
+                _logger?.LogDebug("Уведомление {Index}: Visibility={Visibility}, Opacity={Opacity}, Top={Top}, Left={Left}",
                     i, notif.Visibility, notif.Opacity, top, left);
             }
         }
@@ -266,20 +266,20 @@ namespace DynaNoty.Services
                 }
 
                 _notificationWindow.Container.Children.Remove(notification);
-                
+
                 // Возвращаем в пул для переиспользования
                 _pool.ReturnNotification(notification);
-                
+
                 // Перепозиционируем оставшиеся уведомления
                 RepositionRemainingNotifications();
-                
+
                 // Скрываем окно, если не осталось уведомлений
                 if (_activeNotifications.Count == 0)
                 {
                     _notificationWindow.Hide();
                     _logger?.LogDebug("NotificationWindow скрыт - нет активных уведомлений");
                 }
-                
+
                 _logger?.LogDebug("Уведомление удалено. Осталось активных: {Count}", _activeNotifications.Count);
             }
         }
@@ -292,7 +292,7 @@ namespace DynaNoty.Services
             ThrowIfDisposed();
 
             List<DynamicIslandNotification> notificationsToRemove;
-            
+
             lock (_lock)
             {
                 notificationsToRemove = _activeNotifications.ToList();
@@ -326,7 +326,7 @@ namespace DynaNoty.Services
             try
             {
                 List<DynamicIslandNotification> toRemove;
-                
+
                 lock (_lock)
                 {
                     // Ищем только действительно завершенные уведомления:
@@ -334,7 +334,7 @@ namespace DynaNoty.Services
                     // - Или с нулевой прозрачностью И невидимые (для завершенных анимаций)
                     // НЕ удаляем уведомления с Opacity=0 если они Visible (это нормально для анимаций)
                     toRemove = _activeNotifications
-                        .Where(n => n.Visibility != Visibility.Visible || 
+                        .Where(n => n.Visibility != Visibility.Visible ||
                                    (n.Opacity <= 0 && n.Visibility == Visibility.Hidden))
                         .ToList();
                 }
@@ -344,7 +344,7 @@ namespace DynaNoty.Services
                     _logger?.LogDebug("CleanupCompletedNotifications нашел {Count} уведомлений для удаления", toRemove.Count);
                     foreach (var notification in toRemove)
                     {
-                        _logger?.LogDebug("Удаляем уведомление: Visibility={Visibility}, Opacity={Opacity}", 
+                        _logger?.LogDebug("Удаляем уведомление: Visibility={Visibility}, Opacity={Opacity}",
                             notification.Visibility, notification.Opacity);
                         RemoveNotification(notification);
                     }
@@ -357,7 +357,7 @@ namespace DynaNoty.Services
                     {
                         foreach (var notification in _activeNotifications)
                         {
-                            _logger?.LogDebug("Активное уведомление: Visibility={Visibility}, Opacity={Opacity}", 
+                            _logger?.LogDebug("Активное уведомление: Visibility={Visibility}, Opacity={Opacity}",
                                 notification.Visibility, notification.Opacity);
                         }
                     }
@@ -386,7 +386,7 @@ namespace DynaNoty.Services
             {
                 // Используем ConcurrentBag для безопасного доступа без блокировок
                 var notificationsToReposition = new System.Collections.Concurrent.ConcurrentBag<DynamicIslandNotification>();
-                
+
                 // Быстрое копирование без длительной блокировки
                 lock (_lock)
                 {
@@ -395,16 +395,16 @@ namespace DynaNoty.Services
                         notificationsToReposition.Add(notification);
                     }
                 }
-                
+
                 // Перепозиционируем уведомления параллельно
                 var repositionTasks = new List<Task>();
                 int index = 0;
-                
+
                 foreach (var notification in notificationsToReposition)
                 {
                     var currentIndex = index++;
                     var currentNotification = notification;
-                    
+
                     var task = Task.Run(() =>
                     {
                         try
@@ -415,7 +415,7 @@ namespace DynaNoty.Services
                             {
                                 isStillActive = _activeNotifications.Contains(currentNotification);
                             }
-                            
+
                             if (isStillActive)
                             {
                                 // Выполняем перепозиционирование в UI потоке
@@ -444,13 +444,13 @@ namespace DynaNoty.Services
                             _logger?.LogWarning(ex, "Ошибка перепозиционирования уведомления {Index}", currentIndex);
                         }
                     });
-                    
+
                     repositionTasks.Add(task);
                 }
-                
+
                 // Ждем завершения всех задач с таймаутом
                 Task.WaitAll(repositionTasks.ToArray(), TimeSpan.FromSeconds(5));
-                
+
                 _logger?.LogDebug("Перепозиционированы {Count} уведомлений", notificationsToReposition.Count);
             }
             catch (Exception ex)

@@ -28,7 +28,7 @@ namespace DynaNoty.Services
             _config = config ?? throw new ArgumentNullException(nameof(config));
             _themeService = themeService ?? new SystemThemeService();
             _logger = logger;
-            
+
             // Включаем предварительное создание для лучшей производительности
             PreWarmPool();
         }
@@ -53,22 +53,22 @@ namespace DynaNoty.Services
         private DynamicIslandNotification CreateOptimizedNotification()
         {
             // Создаем логгер для DynamicIslandNotification из логгера NotificationPool
-            var notificationLogger = _logger != null ? 
-                Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddDebug()).CreateLogger<DynamicIslandNotification>() : 
+            var notificationLogger = _logger != null ?
+                Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddDebug()).CreateLogger<DynamicIslandNotification>() :
                 null;
-            
+
             var notification = new DynamicIslandNotification(_config, _themeService, notificationLogger);
-            
+
             if (notification == null)
             {
                 _logger?.LogError("Не удалось создать уведомление - конструктор вернул null");
                 throw new InvalidOperationException("Ошибка создания уведомления");
             }
-            
+
             // Предварительно настраиваем для лучшей производительности
             notification.Visibility = System.Windows.Visibility.Collapsed;
             notification.Opacity = 0;
-            
+
             return notification;
         }
 
@@ -166,7 +166,7 @@ namespace DynaNoty.Services
 
                 // Получаем UI поток с упрощенной логикой
                 var dispatcher = GetDispatcher(notification);
-                
+
                 if (dispatcher?.CheckAccess() == true)
                 {
                     PerformReset(notification);
@@ -174,7 +174,7 @@ namespace DynaNoty.Services
                 else if (dispatcher != null)
                 {
                     // Используем BeginInvoke для асинхронного сброса
-                    dispatcher.BeginInvoke(new Action(() => 
+                    dispatcher.BeginInvoke(new Action(() =>
                     {
                         try
                         {
@@ -215,11 +215,11 @@ namespace DynaNoty.Services
         {
             if (notification?.Dispatcher != null)
                 return notification.Dispatcher;
-                
+
             var appDispatcher = System.Windows.Application.Current?.Dispatcher;
             if (appDispatcher != null)
                 return appDispatcher;
-                
+
             _logger?.LogWarning("UI поток недоступен для уведомления");
             return null;
         }
@@ -237,15 +237,15 @@ namespace DynaNoty.Services
                     parentPanel.Children.Remove(notification);
                     _logger?.LogDebug("Уведомление удалено из родительского контейнера");
                 }
-                
+
                 // Сбрасываем видимость и позицию
                 notification.Opacity = 0;
                 notification.Visibility = System.Windows.Visibility.Collapsed;
-                
+
                 // Сбрасываем размер
                 notification.Width = double.NaN;
                 notification.Height = double.NaN;
-                
+
                 _logger?.LogDebug("Состояние уведомления успешно сброшено");
             }
             catch (Exception ex)
@@ -262,7 +262,7 @@ namespace DynaNoty.Services
         {
             if (_disposed)
                 return;
-                
+
             lock (_lock)
             {
                 while (_pool.TryDequeue(out var notification))

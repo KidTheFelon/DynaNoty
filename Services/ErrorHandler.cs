@@ -28,7 +28,7 @@ namespace DynaNoty.Services
         public async Task<T> ExecuteWithRetryAsync<T>(Func<Task<T>> operation, string operationName = null)
         {
             var lastException = (Exception)null;
-            
+
             for (int attempt = 1; attempt <= _maxRetries; attempt++)
             {
                 try
@@ -38,9 +38,9 @@ namespace DynaNoty.Services
                 catch (Exception ex)
                 {
                     lastException = ex;
-                    _logger?.LogWarning(ex, "Ошибка в операции {OperationName} (попытка {Attempt}/{MaxRetries})", 
+                    _logger?.LogWarning(ex, "Ошибка в операции {OperationName} (попытка {Attempt}/{MaxRetries})",
                         operationName ?? "Unknown", attempt, _maxRetries);
-                    
+
                     if (attempt < _maxRetries)
                     {
                         var delay = CalculateDelay(attempt);
@@ -48,8 +48,8 @@ namespace DynaNoty.Services
                     }
                 }
             }
-            
-            _logger?.LogError(lastException, "Операция {OperationName} не удалась после {MaxRetries} попыток", 
+
+            _logger?.LogError(lastException, "Операция {OperationName} не удалась после {MaxRetries} попыток",
                 operationName ?? "Unknown", _maxRetries);
             throw lastException;
         }
@@ -60,7 +60,7 @@ namespace DynaNoty.Services
         public T ExecuteWithRetry<T>(Func<T> operation, string operationName = null)
         {
             var lastException = (Exception)null;
-            
+
             for (int attempt = 1; attempt <= _maxRetries; attempt++)
             {
                 try
@@ -70,9 +70,9 @@ namespace DynaNoty.Services
                 catch (Exception ex)
                 {
                     lastException = ex;
-                    _logger?.LogWarning(ex, "Ошибка в операции {OperationName} (попытка {Attempt}/{MaxRetries})", 
+                    _logger?.LogWarning(ex, "Ошибка в операции {OperationName} (попытка {Attempt}/{MaxRetries})",
                         operationName ?? "Unknown", attempt, _maxRetries);
-                    
+
                     if (attempt < _maxRetries)
                     {
                         var delay = CalculateDelay(attempt);
@@ -80,8 +80,8 @@ namespace DynaNoty.Services
                     }
                 }
             }
-            
-            _logger?.LogError(lastException, "Операция {OperationName} не удалась после {MaxRetries} попыток", 
+
+            _logger?.LogError(lastException, "Операция {OperationName} не удалась после {MaxRetries} попыток",
                 operationName ?? "Unknown", _maxRetries);
             throw lastException;
         }

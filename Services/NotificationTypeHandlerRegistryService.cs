@@ -32,7 +32,7 @@ namespace DynaNoty.Services
         public void RegisterAllHandlers()
         {
             var handlers = _serviceProvider.GetServices<INotificationTypeHandler>();
-            
+
             foreach (var handler in handlers)
             {
                 _registry.RegisterHandler(handler);

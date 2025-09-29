@@ -31,7 +31,7 @@ namespace DynaNoty.Services
         /// <summary>
         /// Плавная анимация с использованием CompositionTarget для лучшей производительности
         /// </summary>
-        public void AnimateProperty<T>(DependencyObject target, DependencyProperty property, 
+        public void AnimateProperty<T>(DependencyObject target, DependencyProperty property,
             T fromValue, T toValue, TimeSpan duration, Action<T> onUpdate, Action onCompleted = null)
         {
             if (!_isAnimating)
@@ -106,7 +106,7 @@ namespace DynaNoty.Services
         private readonly DateTime _startTime;
         private bool _isRunning = false;
 
-        public SmoothAnimation(DependencyObject target, DependencyProperty property, 
+        public SmoothAnimation(DependencyObject target, DependencyProperty property,
             T fromValue, T toValue, TimeSpan duration, Action<T> onUpdate, Action onCompleted = null)
         {
             _target = target;

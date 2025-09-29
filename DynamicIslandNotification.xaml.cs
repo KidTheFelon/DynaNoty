@@ -46,7 +46,7 @@ namespace DynaNoty
         }
 
         public static readonly DependencyProperty TextColorProperty =
-            DependencyProperty.Register("TextColor", typeof(Brush), typeof(DynamicIslandNotification), 
+            DependencyProperty.Register("TextColor", typeof(Brush), typeof(DynamicIslandNotification),
                 new PropertyMetadata(Brushes.White));
 
         public DynamicIslandNotification(NotificationConfiguration config = null, ISystemThemeService themeService = null, ILogger<DynamicIslandNotification> logger = null)
@@ -55,20 +55,20 @@ namespace DynaNoty
             InitializeComponent();
             _config = config ?? new NotificationConfiguration();
             _logger = logger;
-            
+
             var systemThemeService = themeService ?? new SystemThemeService();
             _stateManager = new NotificationStateManager(_config, logger);
             _uiManager = new NotificationUIManager(_config, systemThemeService, logger);
             // Создаем логгер для NotificationAnimationService из логгера DynamicIslandNotification
-            var animationLogger = _logger != null ? 
-                Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddDebug()).CreateLogger<NotificationAnimationService>() : 
+            var animationLogger = _logger != null ?
+                Microsoft.Extensions.Logging.LoggerFactory.Create(builder => builder.AddDebug()).CreateLogger<NotificationAnimationService>() :
                 null;
-            
+
             _animationService = new NotificationAnimationService(_config, animationLogger);
-            
+
             // Отладочное логирование для проверки передачи логгера
             System.Diagnostics.Debug.WriteLine($"DynamicIslandNotification создан. Logger: {(_logger != null ? "НЕ NULL" : "NULL")}, AnimationService logger: {(_animationService.Logger != null ? "НЕ NULL" : "NULL")}");
-            
+
             SetupEventHandlers(systemThemeService);
         }
 
@@ -79,14 +79,14 @@ namespace DynaNoty
         {
             // Подписываемся на изменения системной темы
             themeService.SystemThemeChanged += OnSystemThemeChanged;
-            
+
             // Добавляем обработчик клика для раскрытия
             this.MouseLeftButtonDown += OnNotificationClick;
-            
+
             // Подписываемся на события менеджера состояний
             _stateManager.StateChanged += OnStateChanged;
             _stateManager.AutoHideTriggered += OnAutoHideTriggered;
-            
+
             this.Loaded += OnLoaded;
         }
 
@@ -161,10 +161,10 @@ namespace DynaNoty
         {
             _stateManager.ChangeState(NotificationState.Expanded);
             _uiManager.SetTextDisplayMode(TitleText, SubText, true, false); // Первое раскрытие - одна строка с троеточиями
-            
+
             _stateManager.StopAutoHideTimer();
             _stateManager.StopExpandTimer();
-            
+
             _animationService.AnimateExpand(MainBorder, ContentPanel, () =>
             {
                 if (!_disposed)
@@ -190,7 +190,7 @@ namespace DynaNoty
         private void HandleExpandedStateClick()
         {
             // При клике по расширенному уведомлению переходим к полному раскрытию
-            _logger?.LogDebug("Клик по расширенному уведомлению - переходим к полному раскрытию. EnableAnimations: {EnableAnimations}, ExpandAnimationDuration: {Duration}ms", 
+            _logger?.LogDebug("Клик по расширенному уведомлению - переходим к полному раскрытию. EnableAnimations: {EnableAnimations}, ExpandAnimationDuration: {Duration}ms",
                 _config.EnableAnimations, _config.ExpandAnimationDuration);
             ForceExpand();
         }
@@ -230,17 +230,17 @@ namespace DynaNoty
 
             try
             {
-                _logger?.LogDebug("Принудительное раскрытие уведомления. Текущее состояние: {State}, EnableAnimations: {EnableAnimations}", 
+                _logger?.LogDebug("Принудительное раскрытие уведомления. Текущее состояние: {State}, EnableAnimations: {EnableAnimations}",
                     _stateManager.CurrentState, _config.EnableAnimations);
-                
+
                 _stateManager.ChangeState(NotificationState.FullyExpanded);
-                
+
                 // Устанавливаем режим отображения текста для полностью раскрытого состояния (полный текст)
                 _uiManager.SetTextDisplayMode(TitleText, SubText, true, true);
-                
+
                 // Обновляем и показываем действия при полном раскрытии
                 _uiManager.UpdateActionsPanel(ActionsPanel, OnActionButtonClick);
-                
+
                 _animationService.AnimateFullyExpand(MainBorder, ContentPanel, () =>
                 {
                     if (!_disposed)
@@ -301,7 +301,7 @@ namespace DynaNoty
                 // Настраиваем содержимое
                 _uiManager.SetupContent(TitleText, SubText, IconText, title, subtitle, icon);
                 System.Diagnostics.Debug.WriteLine("Содержимое уведомления настроено");
-                
+
                 System.Diagnostics.Debug.WriteLine("Устанавливаем режим отображения текста");
                 // Устанавливаем режим отображения текста для свернутого состояния
                 _uiManager.SetTextDisplayMode(TitleText, SubText, false, false);
@@ -323,13 +323,13 @@ namespace DynaNoty
                 this.Visibility = Visibility.Visible;
                 this.Opacity = 0.0;
                 System.Diagnostics.Debug.WriteLine("Начальное состояние установлено");
-                
+
                 System.Diagnostics.Debug.WriteLine("Устанавливаем компактный размер");
                 // Устанавливаем компактный размер
                 _uiManager.SetCompactSize(MainBorder, this, ContentPanel, ActionButton, IconContainer);
                 _stateManager.ChangeState(NotificationState.Compact);
                 System.Diagnostics.Debug.WriteLine("Компактный размер установлен");
-                
+
                 System.Diagnostics.Debug.WriteLine("Пересчитываем позицию");
                 // Пересчитываем позицию после установки компактного размера
                 // Используем низкий приоритет для оптимизации производительности
@@ -348,18 +348,18 @@ namespace DynaNoty
                     }
                 }), System.Windows.Threading.DispatcherPriority.Background);
                 System.Diagnostics.Debug.WriteLine("Позиция пересчитана");
-                
+
                 System.Diagnostics.Debug.WriteLine("Запускаем анимацию появления");
                 // Запускаем анимацию появления
                 _animationService.AnimateAppear(this);
                 System.Diagnostics.Debug.WriteLine("Анимация появления запущена");
-                
+
                 System.Diagnostics.Debug.WriteLine("Запускаем таймеры");
                 // Запускаем таймеры
                 System.Diagnostics.Debug.WriteLine($"Проверяем EnableAutoExpand: {_config.EnableAutoExpand}, ExpandDelay: {_config.ExpandDelay}ms");
-                _logger?.LogInformation("Проверяем EnableAutoExpand: {EnableAutoExpand}, ExpandDelay: {ExpandDelay}ms", 
+                _logger?.LogInformation("Проверяем EnableAutoExpand: {EnableAutoExpand}, ExpandDelay: {ExpandDelay}ms",
                     _config.EnableAutoExpand, _config.ExpandDelay);
-                
+
                 if (_config.EnableAutoExpand)
                 {
                     System.Diagnostics.Debug.WriteLine("Запускаем таймер расширения");
@@ -373,9 +373,9 @@ namespace DynaNoty
                 }
                 // НЕ запускаем таймер автоскрытия для компактного состояния
                 // Уведомление остается компактным до клика пользователя
-                
+
                 System.Diagnostics.Debug.WriteLine($"Уведомление настроено. AutoExpand: {_config.EnableAutoExpand}, ExpandDelay: {_config.ExpandDelay}ms");
-                _logger?.LogInformation("Уведомление настроено. AutoExpand: {EnableAutoExpand}, ExpandDelay: {ExpandDelay}ms", 
+                _logger?.LogInformation("Уведомление настроено. AutoExpand: {EnableAutoExpand}, ExpandDelay: {ExpandDelay}ms",
                     _config.EnableAutoExpand, _config.ExpandDelay);
             }
             catch (Exception ex)
@@ -399,7 +399,7 @@ namespace DynaNoty
             IconText.Text = icon ?? NotificationConstants.DEFAULT_ICON;
             _uiManager.SetCompactSize(MainBorder, this, ContentPanel, ActionButton, IconContainer);
             _stateManager.ChangeState(NotificationState.Compact);
-            
+
             // Пересчитываем позицию после установки компактного размера
             // Используем низкий приоритет для оптимизации производительности
             this.Dispatcher.BeginInvoke(new Action(() =>
@@ -416,7 +416,7 @@ namespace DynaNoty
                     _logger?.LogError(ex, "Ошибка пересчета позиции в ShowCompact");
                 }
             }), System.Windows.Threading.DispatcherPriority.Background);
-            
+
             // Применяем цвета
             ApplyColors();
         }
@@ -429,14 +429,14 @@ namespace DynaNoty
             if (_disposed) return;
 
             _logger?.LogDebug("Таймер расширения сработал");
-            
+
             _stateManager.ChangeState(NotificationState.Expanded);
-            
+
             // Устанавливаем режим отображения текста для расширенного состояния (одна строка с троеточиями)
             _uiManager.SetTextDisplayMode(TitleText, SubText, true, false);
-            
+
             _logger?.LogDebug("Запускаем анимацию расширения по ширине");
-            
+
             _animationService.AnimateExpand(MainBorder, ContentPanel, () =>
             {
                 if (!_disposed)
@@ -493,7 +493,7 @@ namespace DynaNoty
         private void AnimateDismiss()
         {
             _logger?.LogDebug("Запускаем анимацию исчезновения");
-            
+
             try
             {
                 _animationService.AnimateDismiss(this, () =>
@@ -522,7 +522,7 @@ namespace DynaNoty
         private void ActionButton_Click(object sender, RoutedEventArgs e)
         {
             ThrowIfDisposed();
-            
+
             ActionClicked?.Invoke(this, EventArgs.Empty);
             AnimateDismiss();
         }
@@ -533,7 +533,7 @@ namespace DynaNoty
         public void Dismiss()
         {
             ThrowIfDisposed();
-            
+
             _stateManager.StopAutoHideTimer();
             AnimateDismiss();
         }
@@ -547,33 +547,33 @@ namespace DynaNoty
             {
                 _logger?.LogDebug("Dispose вызван для уведомления");
                 _disposed = true;
-                
+
                 try
                 {
                     // Останавливаем все таймеры
                     _stateManager?.StopAllTimers();
                     _stateManager?.Dispose();
-                    
+
                     // Очищаем UI менеджер
                     _uiManager?.Dispose();
-                    
+
                     // Очищаем анимационный сервис
                     _animationService?.Dispose();
-                    
+
                     // Отписываемся от системной темы
                     if (_config?.AutoAdaptToSystemTheme == true)
                     {
                         var themeService = new SystemThemeService();
                         themeService.SystemThemeChanged -= OnSystemThemeChanged;
                     }
-                    
+
                     // Отписываемся от событий UI
                     this.MouseLeftButtonDown -= OnNotificationClick;
                     this.Loaded -= OnLoaded;
-                    
+
                     // Безопасно очищаем события
                     ClearEvents();
-                    
+
                     // Очищаем ссылки
                     _positioningService = null;
                     _config = null;
@@ -588,7 +588,7 @@ namespace DynaNoty
                 _logger?.LogDebug("Dispose уже был вызван для уведомления");
             }
         }
-        
+
         /// <summary>
         /// Безопасно очищает все события
         /// </summary>
@@ -600,7 +600,7 @@ namespace DynaNoty
                 Dismissed = null;
                 ActionClicked = null;
                 CustomActionClicked = null;
-                
+
                 _logger?.LogDebug("События уведомления очищены");
             }
             catch (Exception ex)

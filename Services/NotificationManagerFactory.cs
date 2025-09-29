@@ -30,7 +30,7 @@ namespace DynaNoty.Services
 
             // Создаем все зависимости
             var dependencies = CreateDependencies(config, loggerFactory);
-            
+
             // Создаем и возвращаем NotificationManager
             return new NotificationManager(dependencies);
         }
@@ -44,7 +44,7 @@ namespace DynaNoty.Services
             ILoggerFactory loggerFactory = null)
         {
             config ??= new NotificationConfiguration();
-            
+
             var dependencies = new NotificationManagerDependencies
             {
                 NotificationWindow = window ?? new NotificationWindow(config),
@@ -59,11 +59,11 @@ namespace DynaNoty.Services
         /// Создает все зависимости для NotificationManager
         /// </summary>
         private static NotificationManagerDependencies CreateDependencies(
-            NotificationConfiguration config, 
+            NotificationConfiguration config,
             ILoggerFactory loggerFactory)
         {
             var logger = loggerFactory?.CreateLogger<NotificationManager>();
-            
+
             return new NotificationManagerDependencies
             {
                 NotificationWindow = new NotificationWindow(config),
@@ -91,23 +91,23 @@ namespace DynaNoty.Services
             var validationService = new InputValidationService(
                 config,
                 loggerFactory?.CreateLogger<InputValidationService>());
-            
+
             var pool = new NotificationPool(config,
                 new SystemThemeService(loggerFactory?.CreateLogger<SystemThemeService>()),
                 loggerFactory?.CreateLogger<NotificationPool>());
-            
+
             var positioningService = new NotificationPositioningService(config,
                 loggerFactory?.CreateLogger<NotificationPositioningService>());
-            
+
             var lifecycleManager = new NotificationLifecycleManager(
                 new NotificationWindow(config),
                 positioningService,
                 pool,
                 loggerFactory?.CreateLogger<NotificationLifecycleManager>());
-            
+
             var registry = new NotificationTypeHandlerRegistry(
                 loggerFactory?.CreateLogger<NotificationTypeHandlerRegistry>());
-            
+
             // Регистрируем обработчики
             registry.RegisterHandler(new Handlers.CompactNotificationHandler());
             registry.RegisterHandler(new Handlers.MusicNotificationHandler());
@@ -131,11 +131,11 @@ namespace DynaNoty.Services
         {
             var positioningService = new NotificationPositioningService(config,
                 loggerFactory?.CreateLogger<NotificationPositioningService>());
-            
+
             var pool = new NotificationPool(config,
                 new SystemThemeService(loggerFactory?.CreateLogger<SystemThemeService>()),
                 loggerFactory?.CreateLogger<NotificationPool>());
-            
+
             return new NotificationLifecycleManager(
                 new NotificationWindow(config),
                 positioningService,

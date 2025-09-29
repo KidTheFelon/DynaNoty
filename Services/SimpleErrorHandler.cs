@@ -88,17 +88,17 @@ namespace DynaNoty.Services
                 }
                 catch (Exception ex)
                 {
-                    logger?.LogWarning(ex, "Попытка {Attempt}/{MaxRetries} не удалась для операции {OperationName}", 
+                    logger?.LogWarning(ex, "Попытка {Attempt}/{MaxRetries} не удалась для операции {OperationName}",
                         attempt, maxRetries, operationName ?? "Unknown");
-                    
+
                     if (attempt < maxRetries)
                     {
                         System.Threading.Thread.Sleep(delayMs * attempt);
                     }
                 }
             }
-            
-            logger?.LogError("Операция {OperationName} не удалась после {MaxRetries} попыток", 
+
+            logger?.LogError("Операция {OperationName} не удалась после {MaxRetries} попыток",
                 operationName ?? "Unknown", maxRetries);
             return false;
         }
@@ -116,17 +116,17 @@ namespace DynaNoty.Services
                 }
                 catch (Exception ex)
                 {
-                    logger?.LogWarning(ex, "Попытка {Attempt}/{MaxRetries} не удалась для операции {OperationName}", 
+                    logger?.LogWarning(ex, "Попытка {Attempt}/{MaxRetries} не удалась для операции {OperationName}",
                         attempt, maxRetries, operationName ?? "Unknown");
-                    
+
                     if (attempt < maxRetries)
                     {
                         System.Threading.Thread.Sleep(delayMs * attempt);
                     }
                 }
             }
-            
-            logger?.LogError("Операция {OperationName} не удалась после {MaxRetries} попыток", 
+
+            logger?.LogError("Операция {OperationName} не удалась после {MaxRetries} попыток",
                 operationName ?? "Unknown", maxRetries);
             return defaultValue;
         }
@@ -179,7 +179,7 @@ namespace DynaNoty.Services
             catch (Exception ex)
             {
                 logger?.LogError(ex, "UI ошибка в операции {OperationName}", operationName ?? "Unknown");
-                
+
                 // Можно добавить показ пользователю простого сообщения
                 // MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }
@@ -198,7 +198,7 @@ namespace DynaNoty.Services
             catch (Exception ex)
             {
                 logger?.LogError(ex, "UI ошибка в асинхронной операции {OperationName}", operationName ?? "Unknown");
-                
+
                 // Можно добавить показ пользователю простого сообщения
                 // MessageBox.Show($"Произошла ошибка: {ex.Message}", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
             }

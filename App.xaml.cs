@@ -38,10 +38,10 @@ namespace DynaNoty
         protected override void OnExit(ExitEventArgs e)
         {
             _logger?.LogInformation("DynaNoty приложение завершается");
-            
+
             // Освобождение ресурсов
             _serviceProvider?.Dispose();
-            
+
             base.OnExit(e);
         }
     }

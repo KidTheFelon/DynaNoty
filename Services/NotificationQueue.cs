@@ -66,15 +66,15 @@ namespace DynaNoty.Services
                 try
                 {
                     var notification = _queue.Dequeue();
-                    
+
                     // Проверяем на null сразу после извлечения
                     if (notification == null)
                     {
                         _logger?.LogWarning("Очередь вернула null уведомление");
                         return null;
                     }
-                    
-                    _logger?.LogDebug("Уведомление {Title} извлечено из очереди. Осталось: {Count}", 
+
+                    _logger?.LogDebug("Уведомление {Title} извлечено из очереди. Осталось: {Count}",
                         notification.Title, _queue.Count);
                     return notification;
                 }

@@ -44,7 +44,7 @@ namespace DynaNoty.Services
             services.AddSingleton<IConfigurationValidator, ConfigurationValidator>();
             services.AddSingleton<IConfigurationProvider, ConfigurationProvider>();
             services.AddSingleton<AnimationFactory>();
-            
+
             // Регистрируем обработчики типов уведомлений
             services.AddSingleton<INotificationTypeHandlerRegistry, NotificationTypeHandlerRegistry>();
             services.AddSingleton<NotificationTypeHandlerRegistryService>();
