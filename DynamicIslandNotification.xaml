@@ -32,7 +32,7 @@
             <!-- Content -->
             <StackPanel x:Name="ContentPanel" 
                        Grid.Row="0" Grid.Column="1" 
-                       Margin="12,8,0,8"
+                       Margin="12,8,0,12"
                        Visibility="Collapsed">
                 <TextBlock x:Name="TitleText" 
                           Style="{StaticResource NotificationTextStyle}"
@@ -46,12 +46,13 @@
                           TextWrapping="NoWrap"/>
 
                 <!-- Actions Panel - размещен ниже текста -->
-                <StackPanel x:Name="ActionsPanel" 
+                <WrapPanel x:Name="ActionsPanel" 
                            Orientation="Horizontal" 
-                           Margin="0,8,0,0"
+                           HorizontalAlignment="Center"
+                           Margin="0,8,0,12"
                            Visibility="Collapsed">
                     <!-- Actions will be added dynamically -->
-                </StackPanel>
+                </WrapPanel>
             </StackPanel>
 
             <!-- Action Button -->

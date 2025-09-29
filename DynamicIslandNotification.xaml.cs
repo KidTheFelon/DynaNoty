@@ -239,7 +239,7 @@ namespace DynaNoty
                 _uiManager.SetTextDisplayMode(TitleText, SubText, true, true);
 
                 // Обновляем и показываем действия при полном раскрытии
-                _uiManager.UpdateActionsPanel(ActionsPanel, OnActionButtonClick);
+                _uiManager.UpdateActionsPanel(MainBorder, ActionsPanel, OnActionButtonClick);
 
                 _animationService.AnimateFullyExpand(MainBorder, ContentPanel, () =>
                 {
@@ -310,7 +310,7 @@ namespace DynaNoty
                 System.Diagnostics.Debug.WriteLine("Настраиваем действия");
                 // Настраиваем действия
                 _uiManager.SetupActions(actions);
-                _uiManager.UpdateActionsPanel(ActionsPanel, OnActionButtonClick);
+                _uiManager.UpdateActionsPanel(MainBorder, ActionsPanel, OnActionButtonClick);
                 System.Diagnostics.Debug.WriteLine("Действия настроены");
 
                 System.Diagnostics.Debug.WriteLine("Применяем цвета");

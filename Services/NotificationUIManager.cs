@@ -116,7 +116,7 @@ namespace DynaNoty.Services
         /// <summary>
         /// Обновляет панель действий
         /// </summary>
-        public void UpdateActionsPanel(StackPanel actionsPanel, EventHandler<NotificationActionEventArgs> actionClicked)
+        public void UpdateActionsPanel(Border mainBorder, Panel actionsPanel, EventHandler<NotificationActionEventArgs> actionClicked)
         {
             actionsPanel.Children.Clear();
 
@@ -130,15 +130,32 @@ namespace DynaNoty.Services
             var actionsToShow = _actions.Take(2).ToList();
             _logger?.LogDebug("Показываем максимум 2 действия из {TotalCount}", _actions.Count);
 
+            // Вычисляем базовую высоту контейнера для масштабирования кнопок
+            var containerHeight = mainBorder?.ActualHeight > 0
+                ? mainBorder.ActualHeight
+                : (mainBorder?.Height > 0 ? mainBorder.Height : _config.ExpandedNotificationHeight);
+
+            var buttonHeight = ComputeActionButtonHeight(containerHeight);
+
             foreach (var action in actionsToShow)
             {
                 var button = CreateActionButton(action, actionClicked);
+                ApplyActionButtonSizing(button, buttonHeight);
                 actionsPanel.Children.Add(button);
             }
 
+            // Высота панели действий под размер кнопки
+            // Не устанавливаем фиксированную высоту для WrapPanel - пусть адаптируется к содержимому
+            actionsPanel.HorizontalAlignment = HorizontalAlignment.Center;
             actionsPanel.Visibility = Visibility.Visible;
             actionsPanel.Opacity = 1.0;
-            _logger?.LogDebug("ActionsPanel показан с {Count} кнопками", actionsPanel.Children.Count);
+
+            // Отладочная информация о размерах
+            _logger?.LogDebug("ActionsPanel показан с {Count} кнопками. Высота кнопки: {ButtonHeight}px",
+                actionsPanel.Children.Count, buttonHeight);
+
+            // Принудительно обновляем размеры после добавления кнопок
+            actionsPanel.UpdateLayout();
         }
 
         /// <summary>
@@ -170,7 +187,9 @@ namespace DynaNoty.Services
         /// </summary>
         public void SetExpandedSize(Border mainBorder, Panel contentPanel, Button actionButton, FrameworkElement iconContainer = null)
         {
-            mainBorder.Width = _config.MaxNotificationWidth;
+            // Адаптивная ширина: подгоняем под содержимое в разумных пределах
+            var requiredWidth = ComputeRequiredWidth(mainBorder, iconContainer, contentPanel, actionButton);
+            mainBorder.Width = Math.Max(_config.MinNotificationWidth, Math.Min(requiredWidth, _config.MaxNotificationWidth));
             mainBorder.Height = _config.ExpandedNotificationHeight;
             mainBorder.MinHeight = _config.ExpandedNotificationHeight;
 
@@ -195,14 +214,15 @@ namespace DynaNoty.Services
         /// </summary>
         public void SetFullyExpandedSize(Border mainBorder, Panel contentPanel, Button actionButton, FrameworkElement iconContainer = null)
         {
-            var baseHeight = _config.FullyExpandedBaseHeight;
-            var actionsHeight = (_actions != null && _actions.Count > 0) ? _config.ActionsPanelHeight : 0.0;
-            var calculatedHeight = baseHeight + actionsHeight;
+            var calculatedHeight = CalculateRequiredHeight(mainBorder, contentPanel);
+
+            // Адаптивная ширина: подгоняем под содержимое
+            var requiredWidth = ComputeRequiredWidth(mainBorder, iconContainer, contentPanel, actionButton);
+            mainBorder.Width = Math.Max(_config.MinNotificationWidth, Math.Min(requiredWidth, _config.MaxNotificationWidth));
 
             mainBorder.Height = calculatedHeight;
             mainBorder.MinHeight = calculatedHeight;
             mainBorder.ClearValue(FrameworkElement.MaxHeightProperty);
-            mainBorder.Width = _config.MaxNotificationWidth;
 
             contentPanel.Visibility = Visibility.Visible;
             contentPanel.Opacity = 1.0;
@@ -220,6 +240,71 @@ namespace DynaNoty.Services
             }
 
             _logger?.LogDebug("Установлен полностью раскрытый размер: {Height}px", calculatedHeight);
+
+            // После изменения размеров пересчитаем размеры уже существующих кнопок действий
+            try
+            {
+                var actionsPanel = contentPanel?.FindName("ActionsPanel") as Panel;
+                if (actionsPanel != null && actionsPanel.Children.Count > 0)
+                {
+                    var containerHeight = mainBorder?.ActualHeight > 0
+                        ? mainBorder.ActualHeight
+                        : (mainBorder?.Height > 0 ? mainBorder.Height : _config.ExpandedNotificationHeight);
+                    var buttonHeight = ComputeActionButtonHeight(containerHeight);
+
+                    foreach (var child in actionsPanel.Children)
+                    {
+                        if (child is Button b)
+                        {
+                            ApplyActionButtonSizing(b, buttonHeight);
+                        }
+                    }
+
+                    actionsPanel.Visibility = Visibility.Visible;
+                    actionsPanel.UpdateLayout();
+                }
+            }
+            catch { }
+        }
+
+        private double ComputeRequiredWidth(Border mainBorder, FrameworkElement iconContainer, Panel contentPanel, FrameworkElement rightButton)
+        {
+            contentPanel?.UpdateLayout();
+            iconContainer?.UpdateLayout();
+            rightButton?.UpdateLayout();
+            mainBorder?.UpdateLayout();
+
+            var padding = mainBorder?.Padding ?? new Thickness(0);
+            var iconWidth = iconContainer?.ActualWidth ?? 0;
+            var contentWidth = contentPanel?.DesiredSize.Width > 0 ? contentPanel.DesiredSize.Width : contentPanel?.ActualWidth ?? 0;
+            var rightWidth = rightButton?.ActualWidth ?? 0;
+            var gutter = 24; // зазоры между колонками
+
+            var required = padding.Left + iconWidth + gutter + contentWidth + gutter + rightWidth + padding.Right;
+            // Минимальный запас
+            required = Math.Max(required, _config.MinNotificationWidth + 80);
+            return required;
+        }
+
+        private double CalculateRequiredHeight(Border mainBorder, Panel contentPanel)
+        {
+            // Обновляем layout, чтобы получить актуальные размеры
+            contentPanel?.UpdateLayout();
+            mainBorder?.UpdateLayout();
+
+            var padding = mainBorder?.Padding ?? new Thickness(0);
+            var contentHeight = contentPanel?.ActualHeight ?? 0;
+
+            // Минимальная высота основы и запас на нижний отступ
+            var baseHeight = _config.FullyExpandedBaseHeight;
+
+            // Фактическая требуемая высота
+            var required = contentHeight + padding.Top + padding.Bottom;
+
+            // Берем максимум среди вычисленного, базового и минимального порога
+            var minHeight = Math.Max(_config.MinNotificationHeight, _config.FullyExpandedMinHeight);
+            var calculatedHeight = Math.Max(Math.Max(required, baseHeight), minHeight);
+            return calculatedHeight;
         }
 
         /// <summary>
@@ -260,9 +345,23 @@ namespace DynaNoty.Services
         /// </summary>
         private void ApplyFontSizes(TextBlock titleText, TextBlock subText, TextBlock iconText)
         {
-            titleText.FontSize = _config.TitleFontSize;
-            subText.FontSize = _config.SubtitleFontSize;
-            iconText.FontSize = _config.IconFontSize;
+            // Адаптивно от высоты: если известна текущая высота, используем коэффициенты
+            var container = titleText?.Parent as FrameworkElement;
+            var root = container;
+            while (root != null && root is not Border)
+            {
+                root = root.Parent as FrameworkElement;
+            }
+
+            double baseHeight = (root as Border)?.ActualHeight > 0 ? (root as Border).ActualHeight : _config.FullyExpandedBaseHeight;
+
+            var adaptiveTitle = Math.Max(_config.TitleFontSize, baseHeight * _config.TitleFontScale);
+            var adaptiveSubtitle = Math.Max(_config.SubtitleFontSize, baseHeight * _config.SubtitleFontScale);
+            var adaptiveIcon = Math.Max(_config.IconFontSize, baseHeight * _config.IconFontScale);
+
+            titleText.FontSize = adaptiveTitle;
+            subText.FontSize = adaptiveSubtitle;
+            iconText.FontSize = adaptiveIcon;
         }
 
         /// <summary>
@@ -281,9 +380,16 @@ namespace DynaNoty.Services
         /// </summary>
         private Button CreateActionButton(NotificationAction action, EventHandler<NotificationActionEventArgs> actionClicked)
         {
+            var contentText = new TextBlock
+            {
+                Text = $"{action.Icon} {action.Text}",
+                TextTrimming = TextTrimming.CharacterEllipsis,
+                TextWrapping = TextWrapping.NoWrap
+            };
+
             var button = new Button
             {
-                Content = $"{action.Icon} {action.Text}",
+                Content = contentText,
                 Margin = new Thickness(0, 0, 8, 0),
                 Padding = new Thickness(8, 4, 8, 4),
                 Background = new SolidColorBrush(Color.FromRgb(0, 122, 255)),
@@ -292,13 +398,36 @@ namespace DynaNoty.Services
                 FontSize = 12,
                 Tag = action,
                 Height = 32,
-                MinWidth = 80
+                MinWidth = 80,
+                MaxWidth = 260,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                VerticalContentAlignment = VerticalAlignment.Center,
+                SnapsToDevicePixels = true,
+                ClipToBounds = true
             };
 
             button.Click += (s, e) => actionClicked?.Invoke(s, new NotificationActionEventArgs(action.Id, action.Text, action.Data));
 
             _logger?.LogDebug("Создана кнопка действия: {Content}", button.Content);
             return button;
+        }
+
+        private double ComputeActionButtonHeight(double containerHeight)
+        {
+            // Процент задается из конфигурации
+            var computed = containerHeight * _config.ActionButtonHeightPercent;
+            return Math.Max(_config.ActionButtonMinHeight, Math.Min(computed, _config.ActionButtonMaxHeight));
+        }
+
+        private void ApplyActionButtonSizing(Button button, double buttonHeight)
+        {
+            button.Height = buttonHeight;
+            button.MinWidth = Math.Max(88, buttonHeight * 2.0);
+            button.MaxWidth = Math.Max(200, buttonHeight * 2.6);
+            button.FontSize = Math.Max(12, buttonHeight * _config.ActionButtonFontScale);
+            var horizontalPadding = Math.Max(10, buttonHeight * (_config.ActionButtonFontScale * 0.9));
+            var verticalPadding = Math.Max(6, buttonHeight * 0.28);
+            button.Padding = new Thickness(horizontalPadding, verticalPadding, horizontalPadding, verticalPadding);
         }
 
         /// <summary>

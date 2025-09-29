@@ -182,6 +182,9 @@
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
                                         <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
                                     </Grid.RowDefinitions>
 
                                     <TextBlock Grid.Row="0" Grid.Column="0" Text="📐 Максимальная ширина (px):" 
@@ -218,6 +221,24 @@
                                                Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
                                     <TextBox Grid.Row="5" Grid.Column="1" x:Name="IconSizeTextBox" 
                                              Text="24" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Макс. высота уведомления (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="MaxHeightTextBox" 
+                                             Text="650" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Мин. высота полного раскрытия (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="FullyExpandedMinHeightTextBox" 
+                                             Text="190" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="8" Grid.Column="0" Text="База высоты полного раскрытия (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="8" Grid.Column="1" x:Name="FullyExpandedBaseHeightTextBox" 
+                                             Text="200" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
                                              Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
                                 </Grid>
                             </StackPanel>
@@ -263,6 +284,30 @@
                                                Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
                                     <TextBox Grid.Row="3" Grid.Column="1" x:Name="ActionButtonSizeTextBox" 
                                              Text="24" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Процент высоты для кнопки (0-1):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="4" Grid.Column="1" x:Name="ActionButtonHeightPercentTextBox" 
+                                             Text="0.32" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="5" Grid.Column="0" Text="Мин. высота кнопки (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="5" Grid.Column="1" x:Name="ActionButtonMinHeightTextBox" 
+                                             Text="36" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Макс. высота кнопки (px):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="6" Grid.Column="1" x:Name="ActionButtonMaxHeightTextBox" 
+                                             Text="80" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
+                                             Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
+
+                                    <TextBlock Grid.Row="7" Grid.Column="0" Text="Масштаб шрифта кнопки (0-1):" 
+                                               Foreground="White" VerticalAlignment="Center" Margin="0,5"/>
+                                    <TextBox Grid.Row="7" Grid.Column="1" x:Name="ActionButtonFontScaleTextBox" 
+                                             Text="0.40" Margin="10,5" Padding="8" Background="#FF3A3A3C" 
                                              Foreground="White" BorderBrush="#FF007AFF" BorderThickness="2"/>
                                 </Grid>
                             </StackPanel>

@@ -11,7 +11,7 @@ namespace DynaNoty.Configuration
         /// <summary>
         /// Максимальная ширина уведомления (пиксели)
         /// </summary>
-        public double MaxNotificationWidth { get; set; } = 400;
+        public double MaxNotificationWidth { get; set; } = 520;
 
         /// <summary>
         /// Минимальная ширина уведомления (пиксели)
@@ -31,22 +31,22 @@ namespace DynaNoty.Configuration
         /// <summary>
         /// Минимальная высота уведомления при полном раскрытии (пиксели)
         /// </summary>
-        public double FullyExpandedMinHeight { get; set; } = 135;
+        public double FullyExpandedMinHeight { get; set; } = 190;
 
         /// <summary>
         /// Максимальная высота уведомления (пиксели)
         /// </summary>
-        public double MaxNotificationHeight { get; set; } = 400;
+        public double MaxNotificationHeight { get; set; } = 650;
 
         /// <summary>
         /// Базовая высота для полностью раскрытого уведомления (пиксели)
         /// </summary>
-        public double FullyExpandedBaseHeight { get; set; } = 160;
+        public double FullyExpandedBaseHeight { get; set; } = 200;
 
         /// <summary>
         /// Высота панели действий (пиксели)
         /// </summary>
-        public double ActionsPanelHeight { get; set; } = 50;
+        public double ActionsPanelHeight { get; set; } = 72;
 
         /// <summary>
         /// Размер иконки
@@ -57,6 +57,26 @@ namespace DynaNoty.Configuration
         /// Размер кнопки действия (пиксели)
         /// </summary>
         public double ActionButtonSize { get; set; } = 24;
+
+        /// <summary>
+        /// Доля высоты уведомления для расчета высоты кнопки действия (0-1)
+        /// </summary>
+        public double ActionButtonHeightPercent { get; set; } = 0.24;
+
+        /// <summary>
+        /// Минимальная высота кнопки действия
+        /// </summary>
+        public double ActionButtonMinHeight { get; set; } = 30;
+
+        /// <summary>
+        /// Максимальная высота кнопки действия
+        /// </summary>
+        public double ActionButtonMaxHeight { get; set; } = 64;
+
+        /// <summary>
+        /// Масштаб шрифта кнопки относительно её высоты
+        /// </summary>
+        public double ActionButtonFontScale { get; set; } = 0.38;
 
         // === Позиционирование ===
         /// <summary>
@@ -110,6 +130,11 @@ namespace DynaNoty.Configuration
         /// Размер иконки
         /// </summary>
         public double IconFontSize { get; set; } = 20;
+
+        // Адаптивные коэффициенты шрифтов (доля от высоты уведомления)
+        public double TitleFontScale { get; set; } = 0.096;
+        public double SubtitleFontScale { get; set; } = 0.082;
+        public double IconFontScale { get; set; } = 0.112;
 
         // === Тема ===
         /// <summary>

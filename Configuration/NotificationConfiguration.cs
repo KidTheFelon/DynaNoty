@@ -164,6 +164,42 @@ namespace DynaNoty.Configuration
         }
 
         /// <summary>
+        /// Доля высоты для расчета высоты кнопки действия
+        /// </summary>
+        public double ActionButtonHeightPercent
+        {
+            get => Appearance.ActionButtonHeightPercent;
+            set => Appearance.ActionButtonHeightPercent = value;
+        }
+
+        /// <summary>
+        /// Минимальная высота кнопки действия
+        /// </summary>
+        public double ActionButtonMinHeight
+        {
+            get => Appearance.ActionButtonMinHeight;
+            set => Appearance.ActionButtonMinHeight = value;
+        }
+
+        /// <summary>
+        /// Максимальная высота кнопки действия
+        /// </summary>
+        public double ActionButtonMaxHeight
+        {
+            get => Appearance.ActionButtonMaxHeight;
+            set => Appearance.ActionButtonMaxHeight = value;
+        }
+
+        /// <summary>
+        /// Масштаб шрифта кнопки относительно её высоты
+        /// </summary>
+        public double ActionButtonFontScale
+        {
+            get => Appearance.ActionButtonFontScale;
+            set => Appearance.ActionButtonFontScale = value;
+        }
+
+        /// <summary>
         /// Отступ от верха экрана (пиксели)
         /// </summary>
         public double TopMargin
@@ -350,6 +386,24 @@ namespace DynaNoty.Configuration
         {
             get => Appearance.IconFontSize;
             set => Appearance.IconFontSize = value;
+        }
+
+        public double TitleFontScale
+        {
+            get => Appearance.TitleFontScale;
+            set => Appearance.TitleFontScale = value;
+        }
+
+        public double SubtitleFontScale
+        {
+            get => Appearance.SubtitleFontScale;
+            set => Appearance.SubtitleFontScale = value;
+        }
+
+        public double IconFontScale
+        {
+            get => Appearance.IconFontScale;
+            set => Appearance.IconFontScale = value;
         }
 
         /// <summary>

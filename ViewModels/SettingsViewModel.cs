@@ -52,6 +52,13 @@ namespace DynaNoty.ViewModels
         private double _notificationAreaHeight;
         private double _iconSize;
         private double _actionButtonSize;
+        private double _maxHeight;
+        private double _fullyExpandedMinHeight;
+        private double _fullyExpandedBaseHeight;
+        private double _actionButtonHeightPercent;
+        private double _actionButtonMinHeight;
+        private double _actionButtonMaxHeight;
+        private double _actionButtonFontScale;
 
         // Анимации
         private int _appearDuration;
@@ -255,6 +262,48 @@ namespace DynaNoty.ViewModels
         {
             get => _actionButtonSize;
             set => SetProperty(ref _actionButtonSize, value);
+        }
+
+        public double MaxHeight
+        {
+            get => _maxHeight;
+            set => SetProperty(ref _maxHeight, value);
+        }
+
+        public double FullyExpandedMinHeight
+        {
+            get => _fullyExpandedMinHeight;
+            set => SetProperty(ref _fullyExpandedMinHeight, value);
+        }
+
+        public double FullyExpandedBaseHeight
+        {
+            get => _fullyExpandedBaseHeight;
+            set => SetProperty(ref _fullyExpandedBaseHeight, value);
+        }
+
+        public double ActionButtonHeightPercent
+        {
+            get => _actionButtonHeightPercent;
+            set => SetProperty(ref _actionButtonHeightPercent, value);
+        }
+
+        public double ActionButtonMinHeight
+        {
+            get => _actionButtonMinHeight;
+            set => SetProperty(ref _actionButtonMinHeight, value);
+        }
+
+        public double ActionButtonMaxHeight
+        {
+            get => _actionButtonMaxHeight;
+            set => SetProperty(ref _actionButtonMaxHeight, value);
+        }
+
+        public double ActionButtonFontScale
+        {
+            get => _actionButtonFontScale;
+            set => SetProperty(ref _actionButtonFontScale, value);
         }
 
         // Анимации
@@ -481,6 +530,13 @@ namespace DynaNoty.ViewModels
                 NotificationAreaHeight = _config.NotificationAreaHeight;
                 IconSize = _config.IconSize;
                 ActionButtonSize = _config.ActionButtonSize;
+                MaxHeight = _config.MaxNotificationHeight;
+                FullyExpandedMinHeight = _config.FullyExpandedMinHeight;
+                FullyExpandedBaseHeight = _config.FullyExpandedBaseHeight;
+                ActionButtonHeightPercent = _config.ActionButtonHeightPercent;
+                ActionButtonMinHeight = _config.ActionButtonMinHeight;
+                ActionButtonMaxHeight = _config.ActionButtonMaxHeight;
+                ActionButtonFontScale = _config.ActionButtonFontScale;
 
                 // Анимации
                 AppearDuration = _config.AppearAnimationDuration;
@@ -568,6 +624,13 @@ namespace DynaNoty.ViewModels
                 _config.NotificationAreaHeight = NotificationAreaHeight;
                 _config.IconSize = IconSize;
                 _config.ActionButtonSize = ActionButtonSize;
+                _config.MaxNotificationHeight = MaxHeight;
+                _config.FullyExpandedMinHeight = FullyExpandedMinHeight;
+                _config.FullyExpandedBaseHeight = FullyExpandedBaseHeight;
+                _config.ActionButtonHeightPercent = ActionButtonHeightPercent;
+                _config.ActionButtonMinHeight = ActionButtonMinHeight;
+                _config.ActionButtonMaxHeight = ActionButtonMaxHeight;
+                _config.ActionButtonFontScale = ActionButtonFontScale;
 
                 // Анимации
                 _config.AppearAnimationDuration = AppearDuration;

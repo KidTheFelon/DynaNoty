@@ -57,6 +57,13 @@ namespace DynaNoty.Services
                 SetTextBoxValue(uiElements, "NotificationAreaHeightTextBox", viewModel.NotificationAreaHeight.ToString());
                 SetTextBoxValue(uiElements, "IconSizeTextBox", viewModel.IconSize.ToString());
                 SetTextBoxValue(uiElements, "ActionButtonSizeTextBox", viewModel.ActionButtonSize.ToString());
+                SetTextBoxValue(uiElements, "MaxHeightTextBox", viewModel.MaxHeight.ToString());
+                SetTextBoxValue(uiElements, "FullyExpandedMinHeightTextBox", viewModel.FullyExpandedMinHeight.ToString());
+                SetTextBoxValue(uiElements, "FullyExpandedBaseHeightTextBox", viewModel.FullyExpandedBaseHeight.ToString());
+                SetTextBoxValue(uiElements, "ActionButtonHeightPercentTextBox", viewModel.ActionButtonHeightPercent.ToString());
+                SetTextBoxValue(uiElements, "ActionButtonMinHeightTextBox", viewModel.ActionButtonMinHeight.ToString());
+                SetTextBoxValue(uiElements, "ActionButtonMaxHeightTextBox", viewModel.ActionButtonMaxHeight.ToString());
+                SetTextBoxValue(uiElements, "ActionButtonFontScaleTextBox", viewModel.ActionButtonFontScale.ToString());
 
                 // Анимации
                 SetTextBoxValue(uiElements, "AppearDurationTextBox", viewModel.AppearDuration.ToString());
@@ -129,6 +136,13 @@ namespace DynaNoty.Services
                 viewModel.NotificationAreaHeight = GetDoubleValue(uiElements, "NotificationAreaHeightTextBox");
                 viewModel.IconSize = GetDoubleValue(uiElements, "IconSizeTextBox");
                 viewModel.ActionButtonSize = GetDoubleValue(uiElements, "ActionButtonSizeTextBox");
+                viewModel.MaxHeight = GetDoubleValue(uiElements, "MaxHeightTextBox");
+                viewModel.FullyExpandedMinHeight = GetDoubleValue(uiElements, "FullyExpandedMinHeightTextBox");
+                viewModel.FullyExpandedBaseHeight = GetDoubleValue(uiElements, "FullyExpandedBaseHeightTextBox");
+                viewModel.ActionButtonHeightPercent = GetDoubleValue(uiElements, "ActionButtonHeightPercentTextBox");
+                viewModel.ActionButtonMinHeight = GetDoubleValue(uiElements, "ActionButtonMinHeightTextBox");
+                viewModel.ActionButtonMaxHeight = GetDoubleValue(uiElements, "ActionButtonMaxHeightTextBox");
+                viewModel.ActionButtonFontScale = GetDoubleValue(uiElements, "ActionButtonFontScaleTextBox");
 
                 // Анимации
                 viewModel.AppearDuration = GetIntValue(uiElements, "AppearDurationTextBox");

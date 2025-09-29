@@ -92,7 +92,10 @@ namespace DynaNoty.Services
             if (!_config.EnableAnimations)
             {
                 _logger?.LogInformation("Анимации отключены, устанавливаем размеры напрямую");
-                mainBorder.Width = _config.MaxNotificationWidth;
+                // Адаптивная ширина
+                mainBorder.MinWidth = _config.MinNotificationWidth;
+                mainBorder.ClearValue(FrameworkElement.WidthProperty);
+                mainBorder.MaxWidth = _config.MaxNotificationWidth;
                 contentPanel.Visibility = Visibility.Visible;
                 contentPanel.Opacity = 1.0;
                 if (actionButton != null)
@@ -584,20 +587,26 @@ namespace DynaNoty.Services
             {
                 _logger?.LogInformation("Анимации отключены, устанавливаем размеры напрямую");
                 // Устанавливаем размеры напрямую без анимации
-                mainBorder.Width = _config.MaxNotificationWidth;
-                var baseHeight = _config.FullyExpandedBaseHeight;
-                var actionsHeight = 0.0;
-
-                if (contentPanel != null)
+                // Адаптивная ширина
+                mainBorder.MinWidth = _config.MinNotificationWidth;
+                mainBorder.ClearValue(FrameworkElement.WidthProperty);
+                mainBorder.MaxWidth = _config.MaxNotificationWidth;
+                contentPanel?.UpdateLayout();
+                mainBorder?.UpdateLayout();
+                var padding = mainBorder?.Padding ?? new Thickness(0);
+                var contentHeight = contentPanel?.ActualHeight ?? 0;
+                // Если есть ActionsPanel, учитываем её желаемую высоту, чтобы не схлопывалась
+                var actionsPanel = contentPanel?.FindName("ActionsPanel") as System.Windows.Controls.Panel;
+                if (actionsPanel != null)
                 {
-                    var actionsPanel = contentPanel.FindName("ActionsPanel") as StackPanel;
-                    if (actionsPanel != null && actionsPanel.Children.Count > 0)
-                    {
-                        actionsHeight = _config.ActionsPanelHeight;
-                    }
+                    actionsPanel.UpdateLayout();
+                    var contentActual = contentPanel != null ? contentPanel.ActualHeight : 0.0;
+                    contentHeight = Math.Max(contentHeight, actionsPanel.DesiredSize.Height + (contentActual - actionsPanel.ActualHeight));
                 }
-
-                var targetHeight = Math.Max(baseHeight + actionsHeight, _config.FullyExpandedMinHeight);
+                var required = contentHeight + padding.Top + padding.Bottom;
+                var minHeight = Math.Max(_config.MinNotificationHeight, _config.FullyExpandedMinHeight);
+                var baseHeight = _config.FullyExpandedBaseHeight;
+                var targetHeight = Math.Max(Math.Max(required, baseHeight), minHeight);
                 mainBorder.Height = targetHeight;
                 mainBorder.MinHeight = targetHeight;
 
@@ -635,31 +644,23 @@ namespace DynaNoty.Services
                 mainBorder.ClearValue(FrameworkElement.MaxHeightProperty);
 
                 // Устанавливаем максимальную ширину для полного раскрытия
-                mainBorder.Width = _config.MaxNotificationWidth;
+                // Адаптивная ширина
+                mainBorder.MinWidth = _config.MinNotificationWidth;
+                mainBorder.ClearValue(FrameworkElement.WidthProperty);
+                mainBorder.MaxWidth = _config.MaxNotificationWidth;
                 _logger?.LogInformation("Установлена ширина: {Width}px", _config.MaxNotificationWidth);
 
                 // Рассчитываем высоту с учетом действий
-                var baseHeight = _config.FullyExpandedBaseHeight;
-                var actionsHeight = 0.0;
-                _logger?.LogInformation("Базовая высота: {BaseHeight}px", baseHeight);
-
-                // Если есть действия, добавляем высоту для них
-                if (contentPanel != null)
-                {
-                    var actionsPanel = contentPanel.FindName("ActionsPanel") as StackPanel;
-                    if (actionsPanel != null && actionsPanel.Children.Count > 0)
-                    {
-                        actionsHeight = _config.ActionsPanelHeight;
-                        _logger?.LogInformation("Найдена панель действий с {Count} кнопками, добавляем {Height}px",
-                            actionsPanel.Children.Count, actionsHeight);
-                        System.Diagnostics.Debug.WriteLine($"Найдена панель действий с {actionsPanel.Children.Count} кнопками, добавляем {actionsHeight}px");
-                    }
-                }
-
-                var targetHeight = baseHeight + actionsHeight;
-                _logger?.LogInformation("Рассчитанная высота: базовая {BaseHeight}px + действия {ActionsHeight}px = {TargetHeight}px",
-                    baseHeight, actionsHeight, targetHeight);
-                System.Diagnostics.Debug.WriteLine($"Рассчитанная высота: базовая {baseHeight}px + действия {actionsHeight}px = {targetHeight}px");
+                // Пересчет по фактической высоте контента
+                contentPanel?.UpdateLayout();
+                mainBorder?.UpdateLayout();
+                var padding2 = mainBorder?.Padding ?? new Thickness(0);
+                var contentHeight2 = contentPanel?.ActualHeight ?? 0;
+                var required2 = contentHeight2 + padding2.Top + padding2.Bottom;
+                var minHeight2 = Math.Max(_config.MinNotificationHeight, _config.FullyExpandedMinHeight);
+                var baseHeight2 = _config.FullyExpandedBaseHeight;
+                var targetHeight = Math.Max(Math.Max(required2, baseHeight2), minHeight2);
+                _logger?.LogInformation("Рассчитанная высота по контенту: {TargetHeight}px", targetHeight);
 
                 // Используем фиксированную высоту для полного раскрытия
                 // Минимальная высота нужна только для предотвращения слишком маленьких уведомлений
@@ -692,7 +693,10 @@ namespace DynaNoty.Services
                     mainBorder.Height = targetHeight;
                     mainBorder.MinHeight = targetHeight;
                     // Убеждаемся, что ширина остается максимальной
-                    mainBorder.Width = _config.MaxNotificationWidth;
+                    // Адаптивная ширина
+                    mainBorder.MinWidth = _config.MinNotificationWidth;
+                    mainBorder.ClearValue(FrameworkElement.WidthProperty);
+                    mainBorder.MaxWidth = _config.MaxNotificationWidth;
                     _logger?.LogInformation("Установлены финальные размеры: Width={Width}px, Height={Height}px",
                         _config.MaxNotificationWidth, targetHeight);
 
