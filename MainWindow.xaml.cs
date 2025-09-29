@@ -23,13 +23,12 @@ namespace DynaNoty
             _logger = logger;
             _serviceProvider = serviceProvider;
 
-            // Позиционируем окно в верхней части экрана
-            this.Left = SystemParameters.PrimaryScreenWidth - this.Width - 20;
-            this.Top = 20;
-
             // Подписка на события уведомлений
             _notificationService.NotificationDismissed += OnNotificationDismissed;
             _notificationService.NotificationActionClicked += OnNotificationActionClicked;
+
+            // Добавляем поддержку перетаскивания и горячих клавиш
+            this.KeyDown += MainWindow_KeyDown;
         }
 
         private void TestNotification_Click(object sender, RoutedEventArgs e)
@@ -163,6 +162,59 @@ namespace DynaNoty
             }
 
             Application.Current.Shutdown();
+        }
+
+        // Обработчики кастомной шапки
+        private void TitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ClickCount == 2)
+            {
+                // Двойной клик по шапке - развернуть/свернуть окно
+                if (this.WindowState == WindowState.Maximized)
+                    this.WindowState = WindowState.Normal;
+                else
+                    this.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                // Перетаскивание окна
+                this.DragMove();
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Exit_Click(sender, e);
+        }
+
+        // Обработчик горячих клавиш
+        private void MainWindow_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            // Ctrl + S - открыть настройки
+            if (e.Key == System.Windows.Input.Key.S &&
+                (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                SettingsButton_Click(sender, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            // Ctrl + T - тестовое уведомление
+            else if (e.Key == System.Windows.Input.Key.T &&
+                     (System.Windows.Input.Keyboard.Modifiers & System.Windows.Input.ModifierKeys.Control) == System.Windows.Input.ModifierKeys.Control)
+            {
+                TestNotification_Click(sender, new RoutedEventArgs());
+                e.Handled = true;
+            }
+            // Escape - закрыть окно
+            else if (e.Key == System.Windows.Input.Key.Escape)
+            {
+                this.Close();
+                e.Handled = true;
+            }
         }
 
         private void OnNotificationDismissed(object sender, Events.NotificationDismissedEventArgs e)

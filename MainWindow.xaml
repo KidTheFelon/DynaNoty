@@ -4,159 +4,275 @@
         Title="DynaNoty" 
         Height="600" 
         Width="400"
+        MinHeight="400"
+        MinWidth="300"
         WindowStyle="None"
         AllowsTransparency="True"
         Background="Transparent"
-        Topmost="True"
-        WindowStartupLocation="Manual"
-        Left="0"
-        Top="0">
+        Topmost="False"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize">
+    
+    <!-- Ресурсы для анимаций -->
+    <Window.Resources>
+        <!-- Стиль для анимированных кнопок -->
+        <Style x:Key="AnimatedButtonStyle" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="ButtonBorder"
+                                Background="{TemplateBinding Background}" 
+                                CornerRadius="10" 
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" 
+                                            VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <!-- Hover эффект -->
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#FF404040"/>
+                                <Setter TargetName="ButtonBorder" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="1.05" ScaleY="1.05"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                            
+                            <!-- Press эффект -->
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBorder" Property="Background" Value="#FF2A2A2A"/>
+                                <Setter TargetName="ButtonBorder" Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.95" ScaleY="0.95"/>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter TargetName="ButtonBorder" Property="Opacity" Value="0.8"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+        </Style>
+    </Window.Resources>
     
     <Grid>
+        <!-- Кастомная шапка -->
+        <Border x:Name="TitleBar" 
+                Background="#FF2C2C2E" 
+                CornerRadius="20,20,0,0" 
+                Height="32"
+                VerticalAlignment="Top"
+                Margin="40,0,40,0"
+                MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                
+                <!-- Заголовок и иконка -->
+                <StackPanel Grid.Column="0" 
+                           Orientation="Horizontal" 
+                           VerticalAlignment="Center" 
+                           Margin="12,0,0,0">
+                    <TextBlock Text="🔔" 
+                              FontSize="14" 
+                              VerticalAlignment="Center" 
+                              Margin="0,0,6,0"/>
+                    <TextBlock Text="DynaNoty" 
+                              FontSize="12" 
+                              FontWeight="SemiBold" 
+                              Foreground="White" 
+                              VerticalAlignment="Center"/>
+                </StackPanel>
+                
+                <!-- Кнопки управления окном -->
+                <StackPanel Grid.Column="1" 
+                           Orientation="Horizontal" 
+                           VerticalAlignment="Center"
+                           Margin="0,0,8,0">
+                    <!-- Кнопка сворачивания -->
+                    <Button x:Name="MinimizeButton"
+                           Content="─"
+                           Width="26" Height="22"
+                           Background="Transparent"
+                           Foreground="White"
+                           BorderThickness="0"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           Margin="1,0"
+                           Click="MinimizeButton_Click"
+                           ToolTip="Свернуть">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="TitleButtonBorder"
+                                                    Background="{TemplateBinding Background}" 
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="TitleButtonBorder" Property="Background" Value="#FF404040"/>
+                                                    <Setter TargetName="TitleButtonBorder" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="TitleButtonBorder" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    
+                    <!-- Кнопка закрытия -->
+                    <Button x:Name="CloseButton"
+                           Content="✕"
+                           Width="26" Height="22"
+                           Background="Transparent"
+                           Foreground="White"
+                           BorderThickness="0"
+                           FontSize="11"
+                           FontWeight="Bold"
+                           Margin="1,0"
+                           Click="CloseButton_Click"
+                           ToolTip="Закрыть">
+                        <Button.Style>
+                            <Style TargetType="Button">
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="Button">
+                                            <Border x:Name="CloseButtonBorder"
+                                                    Background="{TemplateBinding Background}" 
+                                                    CornerRadius="5">
+                                                <ContentPresenter HorizontalAlignment="Center" 
+                                                                VerticalAlignment="Center"/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter TargetName="CloseButtonBorder" Property="Background" Value="#FFE81123"/>
+                                                    <Setter TargetName="CloseButtonBorder" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="1.1" ScaleY="1.1"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                                <Trigger Property="IsPressed" Value="True">
+                                                    <Setter TargetName="CloseButtonBorder" Property="RenderTransform">
+                                                        <Setter.Value>
+                                                            <ScaleTransform ScaleX="0.9" ScaleY="0.9"/>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="RenderTransformOrigin" Value="0.5,0.5"/>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Основной контент -->
         <Border Background="#FF1C1C1E" 
-                CornerRadius="20" 
-                Margin="20,20,20,0"
+                CornerRadius="0,0,20,20" 
+                Margin="40,32,40,20"
                 Padding="20">
             <StackPanel>
-                <TextBlock Text="DynaNoty" 
-                          FontSize="24" 
-                          FontWeight="Bold" 
+                <TextBlock Text="Панель управления" 
+                          FontSize="18" 
+                          FontWeight="SemiBold" 
                           Foreground="White" 
                           HorizontalAlignment="Center"
                           Margin="0,0,0,20"/>
                 
-                <Button Content="Test Notification" 
+                <Button Content="🧪 Test Notification" 
                         Click="TestNotification_Click"
                         Background="#FF007AFF"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Показать тестовое уведомление (Ctrl+T)"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
                 
-                <Button Content="Test Music Notification" 
+                <Button Content="🎵 Music Notification" 
                         Click="TestMusicNotification_Click"
                         Background="#FF34C759"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Показать музыкальное уведомление"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
 
-                <Button Content="Test Call Notification" 
+                <Button Content="📞 Call Notification" 
                         Click="TestCallNotification_Click"
                         Background="#FFFF3B30"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Показать уведомление о звонке"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
 
-                <Button Content="Test Detail Notification" 
+                <Button Content="📄 Detail Notification" 
                         Click="TestDetailNotification_Click"
                         Background="#FF8E44AD"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Показать детальное уведомление"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
 
-                <Button Content="Test Actions Notification" 
+                <Button Content="⚡ Actions Notification" 
                         Click="TestActionsNotification_Click"
                         Background="#FFE67E22"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Показать уведомление с действиями"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
 
-                <Button Content="Настройки" 
+                <Button Content="⚙️ Настройки" 
                         Click="SettingsButton_Click"
                         Background="#FF007AFF"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,5">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,5"
+                        ToolTip="Открыть настройки приложения (Ctrl+S)"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
                 
-                <Button Content="Exit" 
+                <Button Content="🚪 Выход" 
                         Click="Exit_Click"
                         Background="#FF8E8E93"
                         Foreground="White"
                         BorderThickness="0"
                         Padding="20,10"
-                        Margin="0,20,0,0">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Border Background="{TemplateBinding Background}" 
-                                    CornerRadius="10" 
-                                    Padding="{TemplateBinding Padding}">
-                                <ContentPresenter HorizontalAlignment="Center" 
-                                                VerticalAlignment="Center"/>
-                            </Border>
-                        </ControlTemplate>
-                    </Button.Template>
-                </Button>
+                        Margin="0,20,0,0"
+                        ToolTip="Закрыть приложение (Escape)"
+                        Style="{StaticResource AnimatedButtonStyle}"/>
             </StackPanel>
         </Border>
     </Grid>
