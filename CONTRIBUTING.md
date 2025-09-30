@@ -61,8 +61,9 @@
 **Выберите свой подход к разработке!**
 
 1. **Форкните репозиторий**
-2. **Создайте feature branch**:
+2. **Создайте feature branch от develop**:
    ```bash
+   git checkout develop
    git checkout -b feature/amazing-feature
    # или
    git checkout -b fix/bug-description
@@ -89,7 +90,7 @@
    ```bash
    git push origin feature/amazing-feature
    ```
-9. **Создайте Pull Request** с указанием метода разработки
+9. **Создайте Pull Request** `feature/amazing-feature` → `develop` с указанием метода разработки
 
 ## Процесс разработки
 
@@ -118,18 +119,29 @@
 
 ### Workflow
 
+**Структура веток:**
+- `main` - стабильная версия, только релизы
+- `develop` - активная разработка, интеграция фич
+
 1. **Синхронизируйтесь с upstream**:
    ```bash
    git remote add upstream https://github.com/original/DynaNoty.git
    git fetch upstream
-   git checkout main
-   git merge upstream/main
+   git checkout develop
+   git merge upstream/develop
    ```
 
-2. **Создайте новую ветку** для вашей задачи
+2. **Создайте feature ветку от develop**:
+   ```bash
+   git checkout develop
+   git checkout -b feature/your-feature-name
+   ```
+
 3. **Внесите изменения** с частыми коммитами
 4. **Проверьте сборку** перед каждым коммитом: `dotnet build`
 5. **Обновите документацию** при необходимости
+6. **Создайте PR**: `feature/your-feature` → `develop`
+7. **После мержа в develop** - создайте PR: `develop` → `main` для релиза
 
 ## Важные ограничения
 
@@ -334,6 +346,12 @@ git commit -m "test: add unit tests for notification handlers"
 2. **Ручной review** - минимум 1 одобрение
 3. **Тестирование** - ручное тестирование функциональности
 4. **Слияние** - только после одобрения
+
+### Защита веток
+
+- **main** - защищена, только через PR из develop
+- **develop** - основная ветка для разработки, все feature ветки мержатся сюда
+- **feature ветки** - создаются от develop, мержатся обратно в develop
 
 ## ❓ Вопросы и поддержка
 
